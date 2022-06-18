@@ -2,7 +2,7 @@ name: release
 on:
   push:
     tags:
-      - "v*"
+      - "v*-*"
 
 jobs:
   release:
@@ -37,7 +37,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          prerelease: false
+          prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             coco
