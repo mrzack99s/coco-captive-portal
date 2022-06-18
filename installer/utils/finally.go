@@ -25,6 +25,12 @@ func finally() (err error) {
 
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
+		Name:    "enable net.ipv4.ip_forward",
+		Command: *exec.Command("sysctl", "-w", "net.ipv4.ip_forward=1"),
+	})
+
+	cmds = append(cmds, CommandType{
+		Type:    COMMAND_EXEC_TYPE,
 		Name:    "enable service",
 		Command: *exec.Command("systemctl", "enable", "--now", "coco-captive-portal"),
 	})
