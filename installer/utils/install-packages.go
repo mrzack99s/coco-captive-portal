@@ -26,7 +26,7 @@ func installPackages() (err error) {
 		packages = append(packages, CommandType{
 			Type:    COMMAND_IMPORT_KEY_TYPE,
 			Name:    "import redis key",
-			Command: *exec.Command("gpg", "--dearmor", "-o", "/usr/share/keyrings/redis-archive-keyring.gpg", "/tmp/redis-gpg"),
+			Command: *exec.Command("gpg", "--yes", "--dearmor", "-o", "/usr/share/keyrings/redis-archive-keyring.gpg", "/tmp/redis-gpg"),
 		})
 
 		packages = append(packages, CommandType{

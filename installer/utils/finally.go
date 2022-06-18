@@ -32,7 +32,7 @@ func finally() (err error) {
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
 		Name:    "enable redis service",
-		Command: *exec.Command("systemctl", "enable", "--now", "redis"),
+		Command: *exec.Command("systemctl", "enable", "--now", "redis-server"),
 	})
 
 	cmds = append(cmds, CommandType{
