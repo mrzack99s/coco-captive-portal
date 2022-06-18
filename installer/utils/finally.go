@@ -31,7 +31,13 @@ func finally() (err error) {
 
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
-		Name:    "enable service",
+		Name:    "enable redis service",
+		Command: *exec.Command("systemctl", "enable", "--now", "redis"),
+	})
+
+	cmds = append(cmds, CommandType{
+		Type:    COMMAND_EXEC_TYPE,
+		Name:    "enable coco-captive-portal service",
 		Command: *exec.Command("systemctl", "enable", "--now", "coco-captive-portal"),
 	})
 

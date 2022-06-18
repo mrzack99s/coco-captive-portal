@@ -43,7 +43,6 @@ func (ctl *controller) getAuthentication(c *gin.Context) {
 	var initSession types.InitializedType
 	err := utils.CacheGet(constants.SESSION_INITIALIZE, checkCredential.Secret, &initSession)
 	if err != nil {
-		fmt.Println(err)
 		msg := fmt.Sprintf("wrong initial secret from %s", clientIp)
 		config.AppLog.Error().Msg(msg)
 		c.JSON(http.StatusInternalServerError, gin.H{

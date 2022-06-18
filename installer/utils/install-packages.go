@@ -18,20 +18,27 @@ func installPackages() (err error) {
 		})
 
 		packages = append(packages, CommandType{
-			Type: COMMAND_IMPORT_KEY_TYPE,
-			Name: "redis-key-import",
-			Command: *exec.Command("curl",
-				"-fsSL",
-				"https://packages.redis.io/gpg",
-				"|", "gpg", "--dearmor",
-				"-o",
-				"/usr/share/keyrings/redis-archive-keyring.gpg"),
+			Type:    COMMAND_EXEC_TYPE,
+			Name:    "download redis key",
+			Command: *exec.Command("curl", "-L", "https://packages.redis.io/gpg", "-o", "/tmp/redis-gpg"),
+		})
+
+		packages = append(packages, CommandType{
+			Type:    COMMAND_IMPORT_KEY_TYPE,
+			Name:    "import redis key",
+			Command: *exec.Command("gpg", "--dearmor", "-o", "/usr/share/keyrings/redis-archive-keyring.gpg", "/tmp/redis-gpg"),
+		})
+
+		packages = append(packages, CommandType{
+			Type:    COMMAND_IMPORT_KEY_TYPE,
+			Name:    "import apt list",
+			Command: *exec.Command("echo", "\"deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main\"", ">", "/etc/apt/sources.list.d/redis.list"),
 		})
 
 		packages = append(packages, CommandType{
 			Type:    COMMAND_UPDATE_TYPE,
 			Name:    "repo",
-			Command: *exec.Command("apt-get"),
+			Command: *exec.Command("apt-get", "update"),
 		})
 
 		packages = append(packages, CommandType{

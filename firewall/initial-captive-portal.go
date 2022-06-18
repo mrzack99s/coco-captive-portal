@@ -84,7 +84,6 @@ func bypassNetworks() (err error) {
 func allowEndpoints() (err error) {
 	for _, s := range config.Config.AllowEndpoints {
 		allIp, _ := utils.ResolveAllIp(s.Hostname)
-		fmt.Println(allIp)
 		for _, hostIp := range allIp {
 			err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "--dport", fmt.Sprintf("%d", s.Port), "-d", hostIp, "-j", "ACCEPT")
 			if err != nil {

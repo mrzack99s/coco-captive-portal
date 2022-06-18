@@ -12,8 +12,8 @@ import (
 	"github.com/mrzack99s/coco-captive-portal/utils"
 )
 
-func CaptivePortalDetector(ctx context.Context) {
-	go func(ctx context.Context) {
+func CaptivePortalDetector(ctx context.Context, flag ...bool) {
+	go func(ctx context.Context, flag ...bool) {
 
 		intIp, err := utils.GetSecureInterfaceIpv4Addr()
 		if err != nil {
@@ -26,6 +26,10 @@ func CaptivePortalDetector(ctx context.Context) {
 			case <-ctx.Done():
 				return
 			default:
+				if flag[0] {
+					gin.SetMode(gin.ReleaseMode)
+				}
+
 				router := gin.Default()
 				router.Use(cors.Default())
 				router.Any("/", func(c *gin.Context) {
@@ -59,9 +63,9 @@ func CaptivePortalDetector(ctx context.Context) {
 				router.Run(":8080")
 			}
 		}
-	}(ctx)
+	}(ctx, flag...)
 
-	go func(ctx context.Context) {
+	go func(ctx context.Context, flag ...bool) {
 
 		intIp, err := utils.GetSecureInterfaceIpv4Addr()
 		if err != nil {
@@ -74,6 +78,10 @@ func CaptivePortalDetector(ctx context.Context) {
 			case <-ctx.Done():
 				return
 			default:
+				if flag[0] {
+					gin.SetMode(gin.ReleaseMode)
+				}
+
 				router := gin.Default()
 				router.Use(cors.Default())
 				router.Any("/", func(c *gin.Context) {
@@ -107,5 +115,5 @@ func CaptivePortalDetector(ctx context.Context) {
 				router.RunTLS(":8443", "./certs/fullchain.pem", "./certs/privkey.pem")
 			}
 		}
-	}(ctx)
+	}(ctx, flag...)
 }

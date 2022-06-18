@@ -29,7 +29,7 @@ func AppRunner(flag ...bool) {
 
 	watcher.NetWatcher(context.Background())
 	watcher.NetIdleChecking(context.Background())
-	watcher.CaptivePortalDetector(context.Background())
+	watcher.CaptivePortalDetector(context.Background(), flag...)
 
 	if config.Config.LDAP != nil {
 		if err := config.Config.LDAP.Connect(); err != nil {
@@ -72,13 +72,17 @@ func AppRunner(flag ...bool) {
 			}
 
 			corsConfig.AllowOrigins = []string{config.Config.ExternalPortalURL}
+			corsConfig.AllowAllOrigins = false
+
 			router.Use(cors.New(corsConfig))
 			apiEndpoint := router.Group("/api")
 			api.NewController(apiEndpoint)
 			router.RunTLS(fmt.Sprintf("%s:%s", host, port), "./certs/fullchain.pem", "./certs/privkey.pem")
 
 		} else {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("%s:1800", interfaceIp)}
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s:1800", interfaceIp)}
+			corsConfig.AllowAllOrigins = false
+
 			router.Use(cors.New(corsConfig))
 			apiEndpoint := router.Group("/api")
 			api.NewController(apiEndpoint)
