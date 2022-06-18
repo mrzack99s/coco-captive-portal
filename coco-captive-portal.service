@@ -1,0 +1,12 @@
+[Unit]
+Description=Run the Coco-Captive-portal service
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/var/coco-captive-portal
+ExecStart=/var/coco-captive-portal/coco run --production
+
+[Install]
+WantedBy=multi-user.target

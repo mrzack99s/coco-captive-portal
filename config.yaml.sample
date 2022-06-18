@@ -1,0 +1,34 @@
+egress_interface: eth0 # Egress Interface
+secure_interface: eth1 # Secure Interface (LAN Port)
+session_idle: 30 # Minutes
+max_concurrent_session: 5 # to limit a concurrent session
+external_portal_url: # Optional
+redirect_url: # Optional
+ldap: # Use ldap authentication
+  product: google # google | common
+  tls_enable: true
+  hostname:
+  port: 636
+  bind_username: # Optional
+  bind_password: # Optional
+  allow_base_dn: # Optional. Is string array
+radius: # Use radius authentication
+  hostname:
+  port: 636
+  secret:
+html: # To config html
+  default_language: "en" # en | th
+  en_title_name: "CoCo"
+  en_sub_title: "Hello"
+  th_title_name: "โคโค่"
+  th_sub_title: "สวัสดี"
+  logo_file_name: # Optional
+  background_file_name: # Optional
+bypass_networks: # To bypass network cidr with pattern [network]/[prefix]
+  - "192.168.200.10/32"
+allow_endpoints: # To allow access to endpoint without captive portal
+  - hostname:
+    port:
+administrator: # To set admin monitoring credential
+  username: admin
+  password: P@ssw0rd

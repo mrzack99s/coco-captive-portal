@@ -1,0 +1,385 @@
+basePath: /api
+definitions:
+  gin.H:
+    additionalProperties:
+      type: any
+    type: object
+  types.AuthorizedResponseType:
+    properties:
+      issue:
+        type: string
+      redirect_url:
+        type: string
+      status:
+        type: string
+    type: object
+  types.CheckCredentialType:
+    properties:
+      password:
+        type: string
+      secret:
+        type: string
+      username:
+        type: string
+    type: object
+  types.CredentialType:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  types.HTMLType:
+    properties:
+      background_file_name:
+        type: string
+      default_language:
+        type: string
+      en_sub_title:
+        type: string
+      en_title_name:
+        type: string
+      logo_file_name:
+        type: string
+      th_sub_title:
+        type: string
+      th_title_name:
+        type: string
+    type: object
+  types.InitializedType:
+    properties:
+      ip_address:
+        type: string
+      secret:
+        type: string
+    type: object
+  types.SessionType:
+    properties:
+      ip_address:
+        type: string
+      issue:
+        type: string
+      last_seen:
+        type: string
+      session_uuid:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a COCO Captive Portal
+  license:
+    name: Apache License Version 2.0
+    url: https://github.com/mrzack99s/coco-captive-portal
+  title: COCO Captive Portal
+  version: 1.0.0
+paths:
+  /v1/adm-signed:
+    get:
+      consumes:
+      - application/json
+      description: Get admin signed
+      operationId: adm-signed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get admin signed
+      tags:
+      - Authentication
+  /v1/authentication:
+    post:
+      consumes:
+      - application/json
+      description: Check credential to get access
+      operationId: authentication
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.CheckCredentialType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.AuthorizedResponseType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Authentication
+      tags:
+      - Authentication
+  /v1/check-is-administrator:
+    post:
+      consumes:
+      - application/json
+      description: Check is administrator
+      operationId: check-is-administrator
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.CredentialType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Check is administrator
+      tags:
+      - Operator
+  /v1/get-all-session:
+    get:
+      consumes:
+      - application/json
+      description: Get all session
+      operationId: get-all-session
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.SessionType'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all session
+      tags:
+      - Operator
+  /v1/html-properties:
+    get:
+      consumes:
+      - application/json
+      description: Get html properties
+      operationId: html-properties
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.HTMLType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get html properties
+      tags:
+      - HTML
+  /v1/initialize:
+    get:
+      consumes:
+      - application/json
+      description: Get initialize secret to get access
+      operationId: initialize
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.InitializedType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get initialize secret to get access
+      tags:
+      - Authentication
+  /v1/kick-ip-address:
+    put:
+      consumes:
+      - application/json
+      description: To kick via ip address
+      operationId: kick-via-ip-address
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.SessionType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: To kick via ip address
+      tags:
+      - Operator
+  /v1/kick-username:
+    put:
+      consumes:
+      - application/json
+      description: To kick via username
+      operationId: kick-via-username
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.SessionType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: To kick via username
+      tags:
+      - Operator
+  /v1/revoke-administrator:
+    get:
+      consumes:
+      - application/json
+      description: Revoke administrator
+      operationId: revoke-administrator
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Revoke administrator
+      tags:
+      - Operator
+  /v1/sign-out:
+    get:
+      consumes:
+      - application/json
+      description: Sign out
+      operationId: sign-out
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Sign out
+      tags:
+      - Authentication
+  /v1/signed:
+    get:
+      consumes:
+      - application/json
+      description: Get signed by ip address
+      operationId: signed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.SessionType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get signed by ip address
+      tags:
+      - Authentication
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: api-token
+    type: apiKey
+swagger: "2.0"

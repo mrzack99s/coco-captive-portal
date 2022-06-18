@@ -1,0 +1,5 @@
+app_credentials.yaml
+config.yaml
+certs/*.pem
+.vscode/*
+*.log
