@@ -49,9 +49,9 @@ func AppRunner(flag ...bool) {
 	router.GET("/docs", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/docs/index.html")
 	})
-	router.Use(static.Serve("/", static.LocalFile("ui", true)))
+	router.Use(static.Serve("/", static.LocalFile("dist-ui", true)))
 	router.NoRoute(func(c *gin.Context) {
-		c.File("ui/index.html")
+		c.File("dist-ui/index.html")
 	})
 
 	corsConfig := cors.Config{

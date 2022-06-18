@@ -42,5 +42,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             coco
+            coco-installer
+            config.yaml.sample
+            coco-captive-portal.service
             dist-ui.tar.gz
             LICENSE

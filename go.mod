@@ -17,6 +17,7 @@ require (
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe
 	github.com/swaggo/gin-swagger v1.5.0
 	github.com/swaggo/swag v1.8.3
+	github.com/zcalusic/sysinfo v0.9.5
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v3 v3.0.1
 	layeh.com/radius v0.0.0-20210819152912-ad72663a72ab
