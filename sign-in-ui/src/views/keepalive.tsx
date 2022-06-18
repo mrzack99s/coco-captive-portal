@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
 import { Chip } from 'primereact/chip'
 import { Button } from 'primereact/button'
 import { useApiConnector } from '../utils/api-connector';
 import { useNavigate } from 'react-router';
-import { useHtmlProperties, useInitSecret, useLang, useToast } from '../utils/properties';
-import { Password } from 'primereact/password';
-import { localeOption } from 'primereact/api';
+import { useHtmlProperties, useLang, useToast } from '../utils/properties';
 import { Copyright } from '../components/copyright';
 
-
+/* eslint-disable */
 const KeepAlive = () => {
     const apiInstance = useApiConnector();
     const navigate = useNavigate()
@@ -36,6 +33,7 @@ const KeepAlive = () => {
                         <img
                             src={htmlProperties.background_file_name ? require(`../assets/${htmlProperties.background_file_name!}`) : require("../assets/bg-01.jpg")}
                             className="relative ml-auto block w-full h-full"
+                            alt='Backgroung'
                             style={{
                                 padding: 0,
                                 objectFit: 'cover'
@@ -45,6 +43,7 @@ const KeepAlive = () => {
                     <div className="col grid-nogutter p-8 text-left flex align-items-center justify-content-center">
                         <section className='text-center'>
                             <img className="relative mx-auto block"
+                                alt='Logo'
                                 src={htmlProperties.logo_file_name ? require(`../assets/${htmlProperties.logo_file_name!}`) : require("../assets/logo.png")}
                                 style={{ maxWidth: '160px' }} />
                             <span className="block text-center text-6xl text-primary font-bold mb-1">

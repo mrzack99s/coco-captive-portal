@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { useApiConnector } from '../../utils/api-connector';
@@ -8,7 +8,7 @@ import { Password } from 'primereact/password';
 import { useCookies } from 'react-cookie';
 import { Copyright } from '../../components/copyright';
 
-
+/* eslint-disable */
 function SignIn() {
     const apiInstance = useApiConnector();
     const [username, setUsername] = useState("");

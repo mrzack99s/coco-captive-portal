@@ -1,4 +1,4 @@
-import { Api, ApiConfig } from "../api"
+import { Api } from "../api"
 import { useContext, createContext } from "react";
 import { useCookies } from "react-cookie";
 
@@ -28,7 +28,7 @@ export const useApiConnector = () => {
 }
 
 export const useAdminApiConnector = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['api-token']);
+    const [cookies] = useCookies(['api-token']);
     const apiContext = useContext(ApiContext) as ContextProps
     const secureApi = new Api({
         baseUrl: apiContext.instance.baseUrl,

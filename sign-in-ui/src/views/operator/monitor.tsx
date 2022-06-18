@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useAdminApiConnector, useApiConnector } from '../../utils/api-connector';
+import { useEffect, useState } from 'react';
+import { useAdminApiConnector } from '../../utils/api-connector';
 import { useNavigate } from 'react-router';
-import { useHtmlProperties, useToast } from '../../utils/properties';
+import { useToast } from '../../utils/properties';
 import { Menubar } from 'primereact/menubar';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -14,6 +14,7 @@ import { InputText } from 'primereact/inputtext';
 import { Copyright } from '../../components/copyright';
 
 function Monitor() {
+    /* eslint-disable */
     const [data, setData] = useState([] as TypesSessionType[])
     const [refresh, setRefresh] = useState(false)
     const [mounted, setMounted] = useState(false)

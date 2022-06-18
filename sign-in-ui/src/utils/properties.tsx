@@ -37,7 +37,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     const [pageWaiting, setPageWaiting] = useState(false)
     const apiInstance = useApiConnector();
     const toast = useRef({} as any)
-    const [cookies, setCookies, removeCookies] = useCookies(["api-token"])
+    const [cookies, , removeCookies] = useCookies(["api-token"])
 
     const checkCredential = () => {
 
@@ -55,7 +55,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
         } else {
             apiInstance.v1.admSigned()
                 .then(() => {
-                    if (cookies['api-token'] && cookies['api-token'] != "null") {
+                    if (cookies['api-token'] && cookies['api-token'] !== "null") {
                         navigate("/operator/monitor")
                     } else {
                         removeCookies("api-token")
@@ -99,6 +99,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                     }
                 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
 
@@ -134,12 +135,12 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                         onClick={() => {
                             setLang('en')
                         }}
-                        className={`p-button-xs pt-1 px-3 text-sm ${lang != "en" ? "p-button-outlined" : ""}`} />
+                        className={`p-button-xs pt-1 px-3 text-sm ${lang !== "en" ? "p-button-outlined" : ""}`} />
                     <Button label="ภาษาไทย"
                         onClick={() => {
                             setLang('th')
                         }}
-                        className={`p-button-xs pt-1 px-3 text-sm ${lang != "th" ? "p-button-outlined" : ""}`} />
+                        className={`p-button-xs pt-1 px-3 text-sm ${lang !== "th" ? "p-button-outlined" : ""}`} />
                 </span>
             }
 
