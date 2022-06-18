@@ -1,0 +1,27 @@
+project_name: CoCo Captive Portal
+
+release:
+  prerelease: auto
+  draft: false
+  name_template: "CoCo {{ .Version }}"
+
+builds:
+  - <<: &build_defaults
+      binary: coco
+      main: ./coco
+      env:
+        - CGO_ENABLED=1
+    id: linux
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+archives:
+  - name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}"
+    id: linux_binary
+    builds: [linux]
+    format: binary
+  - name_template: dist-ui
+    files:
+      - dist-ui/*
