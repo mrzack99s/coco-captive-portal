@@ -2,10 +2,10 @@ name: release
 on:
   push:
     tags:
-      - "v*"
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-  release:
+  Release:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -28,7 +28,8 @@ jobs:
         run: |
           yarn install 
           yarn build
-          tar -czf dist-ui.tar.gz build/*
+          mv build dist-ui
+          tar -czf dist-ui.tar.gz dist-ui/*
           mv dist-ui.tar.gz ../dist-ui.tar.gz
       - name: Build CoCo Captive Portal
         run: |
