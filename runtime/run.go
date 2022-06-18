@@ -64,6 +64,8 @@ func AppRunner(flag ...bool) {
 
 	if flag[0] {
 
+		egressInterfaceIp, _ := utils.GetEgressInterfaceIpv4Addr()
+
 		if config.Config.ExternalPortalURL != "" {
 
 			_, host, port, err := utils.ParseURL(config.Config.ExternalPortalURL)
@@ -71,7 +73,7 @@ func AppRunner(flag ...bool) {
 				panic(err)
 			}
 
-			corsConfig.AllowOrigins = []string{config.Config.ExternalPortalURL}
+			corsConfig.AllowOrigins = []string{config.Config.ExternalPortalURL, fmt.Sprintf("https://%s:1800", egressInterfaceIp)}
 			corsConfig.AllowAllOrigins = false
 
 			router.Use(cors.New(corsConfig))
@@ -80,7 +82,7 @@ func AppRunner(flag ...bool) {
 			router.RunTLS(fmt.Sprintf("%s:%s", host, port), "./certs/fullchain.pem", "./certs/privkey.pem")
 
 		} else {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s:1800", interfaceIp)}
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s:1800", interfaceIp), fmt.Sprintf("https://%s:1800", egressInterfaceIp)}
 			corsConfig.AllowAllOrigins = false
 
 			router.Use(cors.New(corsConfig))

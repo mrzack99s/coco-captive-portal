@@ -5,12 +5,12 @@ import (
 )
 
 func AllowAccess(ss *types.SessionType) (err error) {
-	err = ipt.Insert("nat", "PREROUTING", 1, "-s", ss.IPAddress, "-p", "tcp", "-m", "tcp", "--dport", "80", "-j", "ACCEPT")
+	err = ipt.Insert("nat", "PREROUTING", 2, "-s", ss.IPAddress, "-p", "tcp", "-m", "tcp", "--dport", "80", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
-	err = ipt.Insert("nat", "PREROUTING", 1, "-s", ss.IPAddress, "-p", "tcp", "-m", "tcp", "--dport", "443", "-j", "ACCEPT")
+	err = ipt.Insert("nat", "PREROUTING", 2, "-s", ss.IPAddress, "-p", "tcp", "-m", "tcp", "--dport", "443", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}

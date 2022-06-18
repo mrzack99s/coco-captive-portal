@@ -89,7 +89,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     useEffect(() => {
         getHtmlProps()
         checkCredential()
-        if (location.pathname.includes("/sign-in")) {
+        if (!location.pathname.includes("/operator") && location.pathname.includes("/sign-in")) {
             apiInstance.v1.initialize()
                 .then(res => res.data)
                 .then(res => {
