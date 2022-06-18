@@ -25,7 +25,7 @@ jobs:
         run: |
           yarn install 
           yarn build
-          mv dist ../dist-ui
+          mv build ../dist-ui
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3
         with:
