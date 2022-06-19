@@ -260,7 +260,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title COCO Captive Portal
- * @version 1.0.0
+ * @version 1
  * @license Apache License Version 2.0 (https://github.com/mrzack99s/coco-captive-portal)
  * @baseUrl /api
  * @contact
@@ -268,18 +268,18 @@ export class HttpClient<SecurityDataType = unknown> {
  * This is a COCO Captive Portal
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  v1 = {
+  api = {
     /**
      * @description Get admin signed
      *
      * @tags Authentication
      * @name AdmSigned
      * @summary Get admin signed
-     * @request GET:/v1/adm-signed
+     * @request GET:/api/adm-signed
      */
     admSigned: (params: RequestParams = {}) =>
       this.request<string, GinH>({
-        path: `/v1/adm-signed`,
+        path: `/api/adm-signed`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -292,11 +292,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name Authentication
      * @summary Authentication
-     * @request POST:/v1/authentication
+     * @request POST:/api/authentication
      */
     authentication: (params: TypesCheckCredentialType, requestParams: RequestParams = {}) =>
       this.request<TypesAuthorizedResponseType, GinH>({
-        path: `/v1/authentication`,
+        path: `/api/authentication`,
         method: "POST",
         body: params,
         type: ContentType.Json,
@@ -310,15 +310,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Operator
      * @name CheckIsAdministrator
      * @summary Check is administrator
-     * @request POST:/v1/check-is-administrator
-     * @secure
+     * @request POST:/api/check-is-administrator
      */
     checkIsAdministrator: (params: TypesCredentialType, requestParams: RequestParams = {}) =>
       this.request<GinH, GinH>({
-        path: `/v1/check-is-administrator`,
+        path: `/api/check-is-administrator`,
         method: "POST",
         body: params,
-        secure: true,
         type: ContentType.Json,
         format: "json",
         ...requestParams,
@@ -330,12 +328,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Operator
      * @name GetAllSession
      * @summary Get all session
-     * @request GET:/v1/get-all-session
+     * @request GET:/api/get-all-session
      * @secure
      */
     getAllSession: (params: RequestParams = {}) =>
       this.request<TypesSessionType[], GinH>({
-        path: `/v1/get-all-session`,
+        path: `/api/get-all-session`,
         method: "GET",
         secure: true,
         type: ContentType.Json,
@@ -349,11 +347,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags HTML
      * @name HtmlProperties
      * @summary Get html properties
-     * @request GET:/v1/html-properties
+     * @request GET:/api/html-properties
      */
     htmlProperties: (params: RequestParams = {}) =>
       this.request<TypesHTMLType, GinH>({
-        path: `/v1/html-properties`,
+        path: `/api/html-properties`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -366,15 +364,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name Initialize
      * @summary Get initialize secret to get access
-     * @request GET:/v1/initialize
+     * @request GET:/api/initialize
      */
     initialize: (params: RequestParams = {}) =>
       this.request<TypesInitializedType, GinH>({
-        path: `/v1/initialize`,
+        path: `/api/initialize`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
         ...params,
+      }),
+
+    /**
+     * @description Exist initialize secret
+     *
+     * @tags Authentication
+     * @name IsExistInitializeSecret
+     * @summary Exist initialize secret
+     * @request POST:/api/is-exist-initialize-secret
+     */
+    isExistInitializeSecret: (params: TypesInitializedType, requestParams: RequestParams = {}) =>
+      this.request<string, GinH>({
+        path: `/api/is-exist-initialize-secret`,
+        method: "POST",
+        body: params,
+        type: ContentType.Json,
+        format: "json",
+        ...requestParams,
       }),
 
     /**
@@ -383,12 +399,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Operator
      * @name KickViaIpAddress
      * @summary To kick via ip address
-     * @request PUT:/v1/kick-ip-address
+     * @request PUT:/api/kick-ip-address
      * @secure
      */
     kickViaIpAddress: (params: TypesSessionType, requestParams: RequestParams = {}) =>
       this.request<string, GinH>({
-        path: `/v1/kick-ip-address`,
+        path: `/api/kick-ip-address`,
         method: "PUT",
         body: params,
         secure: true,
@@ -403,12 +419,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Operator
      * @name KickViaUsername
      * @summary To kick via username
-     * @request PUT:/v1/kick-username
+     * @request PUT:/api/kick-username
      * @secure
      */
     kickViaUsername: (params: TypesSessionType, requestParams: RequestParams = {}) =>
       this.request<string, GinH>({
-        path: `/v1/kick-username`,
+        path: `/api/kick-username`,
         method: "PUT",
         body: params,
         secure: true,
@@ -423,12 +439,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Operator
      * @name RevokeAdministrator
      * @summary Revoke administrator
-     * @request GET:/v1/revoke-administrator
+     * @request GET:/api/revoke-administrator
      * @secure
      */
     revokeAdministrator: (params: RequestParams = {}) =>
       this.request<string, GinH>({
-        path: `/v1/revoke-administrator`,
+        path: `/api/revoke-administrator`,
         method: "GET",
         secure: true,
         type: ContentType.Json,
@@ -442,11 +458,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name SignOut
      * @summary Sign out
-     * @request GET:/v1/sign-out
+     * @request GET:/api/sign-out
      */
     signOut: (params: RequestParams = {}) =>
       this.request<string, GinH>({
-        path: `/v1/sign-out`,
+        path: `/api/sign-out`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -459,11 +475,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Authentication
      * @name Signed
      * @summary Get signed by ip address
-     * @request GET:/v1/signed
+     * @request GET:/api/signed
      */
     signed: (params: RequestParams = {}) =>
       this.request<TypesSessionType, GinH>({
-        path: `/v1/signed`,
+        path: `/api/signed`,
         method: "GET",
         type: ContentType.Json,
         format: "json",

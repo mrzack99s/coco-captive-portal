@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mrzack99s/coco-captive-portal/config"
+	_ "github.com/mrzack99s/coco-captive-portal/types"
 )
 
 // Headers godoc
@@ -17,8 +18,8 @@ import (
 // @Success 200 {object} types.HTMLType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/html-properties [get]
-func (ctl *controller) getHTMLProperties(c *gin.Context) {
+// @Router /api/html-properties [get]
+func (ctl *authController) getHTMLProperties(c *gin.Context) {
 
 	htmlProps := config.Config.HTML
 	c.JSON(http.StatusOK, htmlProps)

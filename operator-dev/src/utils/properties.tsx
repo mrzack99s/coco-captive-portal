@@ -40,65 +40,23 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     const [cookies, , removeCookies] = useCookies(["api-token"])
 
     const checkCredential = () => {
-
-        const location_name = location.pathname
-        if (!location_name.includes("/operator")) {
-            apiInstance.v1.signed()
-                .then(res => res.data)
-                .then(res => {
-                    setIssue(res.issue!)
-                    navigate("/keepalive")
-                })
-                .catch(() => {
-                    navigate("/sign-in")
-                })
-        } else {
-            apiInstance.v1.admSigned()
-                .then(() => {
-                    if (cookies['api-token'] && cookies['api-token'] !== "null") {
-                        navigate("/operator/monitor")
-                    } else {
-                        removeCookies("api-token")
-                        navigate("/operator/sign-in")
-                    }
-                })
-                .catch(() => {
+        apiInstance.api.admSigned()
+            .then(() => {
+                if (cookies['api-token'] && cookies['api-token'] !== "null") {
+                    navigate("/monitor")
+                } else {
                     removeCookies("api-token")
-                    navigate("/operator/sign-in")
-                })
-
-
-        }
-
-    }
-
-    const getHtmlProps = () => {
-        apiInstance.v1.htmlProperties()
-            .then(res => res.data)
-            .then(res => {
-                setHtmlProperties(res!)
-                if (!defaultLangSet) {
-                    setLang(res.default_language!)
-                    setDefaultLangSet(true)
+                    navigate("/sign-in")
                 }
-
+            })
+            .catch(() => {
+                removeCookies("api-token")
+                navigate("/sign-in")
             })
     }
 
-
     useEffect(() => {
-        getHtmlProps()
         checkCredential()
-        if (!location.pathname.includes("/operator") && location.pathname.includes("/sign-in")) {
-            apiInstance.v1.initialize()
-                .then(res => res.data)
-                .then(res => {
-                    setInitSecret(res.secret!)
-                    if (!defaultLangSet) {
-                        navigate("/sign-in")
-                    }
-                })
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
@@ -125,7 +83,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
             }
 
 
-            {!location.pathname.includes("/operator/monitor") &&
+            {!location.pathname.includes("/monitor") &&
                 <span className="p-buttonset" style={{
                     position: "absolute",
                     top: "30px",

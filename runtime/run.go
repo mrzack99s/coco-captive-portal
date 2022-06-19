@@ -42,6 +42,12 @@ func AppRunner(flag ...bool) {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	go operatorRuntime(flag...)
+	authRuntime(flag...)
+
+}
+
+func authRuntime(flag ...bool) {
 	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
 
 	router := gin.Default()
@@ -49,13 +55,16 @@ func AppRunner(flag ...bool) {
 	router.GET("/docs", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/docs/index.html")
 	})
-	router.Use(static.Serve("/", static.LocalFile("dist-ui", true)))
-	router.NoRoute(func(c *gin.Context) {
-		c.File("dist-ui/index.html")
-	})
+
+	if config.Config.ExternalPortalURL == "" {
+		router.Use(static.Serve("/", static.LocalFile("dist-auth-ui", true)))
+		router.NoRoute(func(c *gin.Context) {
+			c.File("dist-auth-ui/index.html")
+		})
+	}
 
 	corsConfig := cors.Config{
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowMethods:     []string{"GET", "POST", "PUT"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "api-token"},
 		AllowCredentials: false,
 		AllowAllOrigins:  true,
@@ -64,38 +73,83 @@ func AppRunner(flag ...bool) {
 
 	if flag[0] {
 
-		egressInterfaceIp, _ := utils.GetEgressInterfaceIpv4Addr()
-
 		if config.Config.ExternalPortalURL != "" {
-
-			_, host, port, err := utils.ParseURL(config.Config.ExternalPortalURL)
-			if err != nil {
-				panic(err)
-			}
-
-			corsConfig.AllowOrigins = []string{config.Config.ExternalPortalURL, fmt.Sprintf("https://%s:1800", egressInterfaceIp)}
-			corsConfig.AllowAllOrigins = false
-
-			router.Use(cors.New(corsConfig))
-			apiEndpoint := router.Group("/api")
-			api.NewController(apiEndpoint)
-			router.RunTLS(fmt.Sprintf("%s:%s", host, port), "./certs/fullchain.pem", "./certs/privkey.pem")
-
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
 		} else {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s:1800", interfaceIp), fmt.Sprintf("https://%s:1800", egressInterfaceIp)}
-			corsConfig.AllowAllOrigins = false
-
-			router.Use(cors.New(corsConfig))
-			apiEndpoint := router.Group("/api")
-			api.NewController(apiEndpoint)
-			router.RunTLS(fmt.Sprintf("%s:1800", interfaceIp), "./certs/fullchain.pem", "./certs/privkey.pem")
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
 		}
-	} else {
+
+		corsConfig.AllowAllOrigins = false
 
 		router.Use(cors.New(corsConfig))
 		apiEndpoint := router.Group("/api")
-		api.NewController(apiEndpoint)
-		router.RunTLS(":1800", "./certs/fullchain.pem", "./certs/privkey.pem")
+		api.NewAuthController(apiEndpoint)
+		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), "./certs/authfullchain.pem", "./certs/authprivkey.pem")
+		if err != nil {
+			config.AppLog.Error().Msg(err.Error())
+			return
+		}
+
+	} else {
+		router.Use(cors.New(corsConfig))
+		apiEndpoint := router.Group("/api")
+		api.NewAuthController(apiEndpoint)
+		err := router.RunTLS(":443", "./certs/authfullchain.pem", "./certs/authprivkey.pem")
+		if err != nil {
+			config.AppLog.Error().Msg(err.Error())
+			return
+		}
+	}
+}
+
+func operatorRuntime(flag ...bool) {
+	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
+
+	router := gin.Default()
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	router.GET("/docs", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/docs/index.html")
+	})
+	router.Use(static.Serve("/", static.LocalFile("dist-operator-ui", true)))
+	router.NoRoute(func(c *gin.Context) {
+		c.File("dist-operator-ui/index.html")
+	})
+
+	corsConfig := cors.Config{
+		AllowMethods:     []string{"GET", "POST", "PUT"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "api-token"},
+		AllowCredentials: false,
+		AllowAllOrigins:  true,
+		MaxAge:           12 * time.Hour,
 	}
 
+	if flag[0] {
+
+		if config.Config.ExternalPortalURL != "" {
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
+		} else {
+			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
+		}
+
+		corsConfig.AllowAllOrigins = false
+
+		router.Use(cors.New(corsConfig))
+		apiEndpoint := router.Group("/api")
+		api.NewOperatorController(apiEndpoint)
+		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), "./certs/operatorfullchain.pem", "./certs/operatorprivkey.pem")
+		if err != nil {
+			config.AppLog.Error().Msg(err.Error())
+			return
+		}
+	} else {
+		fmt.Println("sadasd")
+		router.Use(cors.New(corsConfig))
+		apiEndpoint := router.Group("/api")
+		api.NewOperatorController(apiEndpoint)
+		err := router.RunTLS(":4443", "./certs/operatorfullchain.pem", "./certs/operatorprivkey.pem")
+		if err != nil {
+			config.AppLog.Error().Msg(err.Error())
+			return
+		}
+	}
 }

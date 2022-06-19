@@ -13,13 +13,13 @@ const KeepAlive = () => {
     const htmlProperties = useHtmlProperties();
     const lang = useLang();
     const signOut = () => {
-        apiInstance.v1.signOut()
+        apiInstance.api.signOut()
             .then(() => {
-                toast.current.show({ severity: 'success', summary: 'Success', detail: "Signed out", life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Success', detail: lang == "en" ? "Signed out" : "ออกจากระบบแล้ว", life: 3000 });
                 navigate("/")
             })
             .catch(() => {
-                toast.current.show({ severity: 'error', summary: 'Error', detail: "Sign out failed", life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Error', detail: lang == "en" ? "Sign out failed" : "ออกจากระบบไม่สำเร็จ", life: 3000 });
             })
     }
 

@@ -26,7 +26,13 @@ func finally() (err error) {
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
 		Name:    "enable net.ipv4.ip_forward",
-		Command: *exec.Command("sysctl", "-w", "net.ipv4.ip_forward=1"),
+		Command: *exec.Command("sed", "-i", "'s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/'", "/etc/sysctl.conf"),
+	})
+
+	cmds = append(cmds, CommandType{
+		Type:    COMMAND_EXEC_TYPE,
+		Name:    "commit enable net.ipv4.ip_forward",
+		Command: *exec.Command("sysctl", "-p"),
 	})
 
 	cmds = append(cmds, CommandType{

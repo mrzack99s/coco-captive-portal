@@ -8,11 +8,11 @@
             "name": "Apache License Version 2.0",
             "url": "https://github.com/mrzack99s/coco-captive-portal"
         },
-        "version": "1.0.0"
+        "version": "1"
     },
     "basePath": "/api",
     "paths": {
-        "/v1/adm-signed": {
+        "/api/adm-signed": {
             "get": {
                 "description": "Get admin signed",
                 "consumes": [
@@ -48,7 +48,7 @@
                 }
             }
         },
-        "/v1/authentication": {
+        "/api/authentication": {
             "post": {
                 "description": "Check credential to get access",
                 "consumes": [
@@ -95,13 +95,8 @@
                 }
             }
         },
-        "/v1/check-is-administrator": {
+        "/api/check-is-administrator": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Check is administrator",
                 "consumes": [
                     "application/json"
@@ -147,7 +142,7 @@
                 }
             }
         },
-        "/v1/get-all-session": {
+        "/api/get-all-session": {
             "get": {
                 "security": [
                     {
@@ -191,7 +186,7 @@
                 }
             }
         },
-        "/v1/html-properties": {
+        "/api/html-properties": {
             "get": {
                 "description": "Get html properties",
                 "consumes": [
@@ -227,7 +222,7 @@
                 }
             }
         },
-        "/v1/initialize": {
+        "/api/initialize": {
             "get": {
                 "description": "Get initialize secret to get access",
                 "consumes": [
@@ -263,7 +258,54 @@
                 }
             }
         },
-        "/v1/kick-ip-address": {
+        "/api/is-exist-initialize-secret": {
+            "post": {
+                "description": "Exist initialize secret",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Exist initialize secret",
+                "operationId": "is-exist-initialize-secret",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.InitializedType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/kick-ip-address": {
             "put": {
                 "security": [
                     {
@@ -315,7 +357,7 @@
                 }
             }
         },
-        "/v1/kick-username": {
+        "/api/kick-username": {
             "put": {
                 "security": [
                     {
@@ -367,7 +409,7 @@
                 }
             }
         },
-        "/v1/revoke-administrator": {
+        "/api/revoke-administrator": {
             "get": {
                 "security": [
                     {
@@ -408,7 +450,7 @@
                 }
             }
         },
-        "/v1/sign-out": {
+        "/api/sign-out": {
             "get": {
                 "description": "Sign out",
                 "consumes": [
@@ -444,7 +486,7 @@
                 }
             }
         },
-        "/v1/signed": {
+        "/api/signed": {
             "get": {
                 "description": "Get signed by ip address",
                 "consumes": [

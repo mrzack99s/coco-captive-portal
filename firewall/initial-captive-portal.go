@@ -46,7 +46,7 @@ func InitializeCaptivePortal() (err error) {
 			return
 		}
 	} else {
-		err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "--dport", "1800", "-d", interfaceIp, "-j", "ACCEPT")
+		err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "--dport", "443", "-d", interfaceIp, "-j", "ACCEPT")
 		if err != nil {
 			return
 		}
@@ -102,17 +102,17 @@ func initFinally() (err error) {
 		return
 	}
 
-	err = ipt.AppendUnique("filter", "FORWARD", "-o", config.Config.EgressInterface, "-i", config.Config.SecureInterface, "-s", "0.0.0.0/0", "-m", "conntrack", "--ctstate", "NEW", "-j", "ACCEPT")
+	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-d", interfaceIp, "-m", "tcp", "--dport", "443", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
-	err = ipt.Insert("nat", "PREROUTING", 1, "-s", "0.0.0.0/0", "-p", "tcp", "-d", "1.1.1.1", "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
+	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-d", "1.1.1.1", "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
 	if err != nil {
 		return
 	}
 
-	err = ipt.Insert("nat", "PREROUTING", 1, "-s", "0.0.0.0/0", "-p", "tcp", "-d", "1.1.1.1", "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
+	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-d", "1.1.1.1", "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
 	if err != nil {
 		return
 	}

@@ -38,7 +38,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 							return
 						}
 					} else {
@@ -46,7 +46,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 							return
 						}
 					}
@@ -56,11 +56,15 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 						c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 						return
 					} else {
-						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 						return
 					}
 				})
-				router.Run(":8080")
+				err := router.Run(":8080")
+				if err != nil {
+					config.AppLog.Error().Msg("captive-portal-detect-http: " + err.Error())
+					return
+				}
 			}
 		}
 	}(ctx, flag...)
@@ -90,7 +94,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 							return
 						}
 					} else {
@@ -98,7 +102,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 							return
 						}
 					}
@@ -108,11 +112,15 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 						c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 						return
 					} else {
-						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s:1800", intIp))
+						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
 						return
 					}
 				})
-				router.RunTLS(":8443", "./certs/fullchain.pem", "./certs/privkey.pem")
+				err := router.RunTLS(":8443", "./certs/authfullchain.pem", "./certs/authprivkey.pem")
+				if err != nil {
+					config.AppLog.Error().Msg("captive-portal-detect-https: " + err.Error())
+					return
+				}
 			}
 		}
 	}(ctx, flag...)

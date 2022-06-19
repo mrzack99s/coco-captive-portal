@@ -5,7 +5,8 @@ build: install tidy linux
 generate-ts: 
 	export PATH=$PATH:$(go env GOPATH)/bin;
 	swag init --pd --parseDepth 1 -g ./cli/main.go;
-	npx swagger-typescript-api -p ./docs/swagger.json -o ./sign-in-ui/src -n api.ts;
+	npx swagger-typescript-api -p ./docs/swagger.json -o ./sign-in-dev/src -n api.ts;
+	cp ./sign-in-dev/src/api.ts ./operator-dev/src/api.ts
 install-dev-tools:
 	sudo snap install go --channel=1.17/stable --classic;
 	sudo snap install node --classic;

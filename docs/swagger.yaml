@@ -71,9 +71,9 @@ info:
     name: Apache License Version 2.0
     url: https://github.com/mrzack99s/coco-captive-portal
   title: COCO Captive Portal
-  version: 1.0.0
+  version: "1"
 paths:
-  /v1/adm-signed:
+  /api/adm-signed:
     get:
       consumes:
       - application/json
@@ -97,7 +97,7 @@ paths:
       summary: Get admin signed
       tags:
       - Authentication
-  /v1/authentication:
+  /api/authentication:
     post:
       consumes:
       - application/json
@@ -128,7 +128,7 @@ paths:
       summary: Authentication
       tags:
       - Authentication
-  /v1/check-is-administrator:
+  /api/check-is-administrator:
     post:
       consumes:
       - application/json
@@ -156,12 +156,10 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      security:
-      - ApiKeyAuth: []
       summary: Check is administrator
       tags:
       - Operator
-  /v1/get-all-session:
+  /api/get-all-session:
     get:
       consumes:
       - application/json
@@ -189,7 +187,7 @@ paths:
       summary: Get all session
       tags:
       - Operator
-  /v1/html-properties:
+  /api/html-properties:
     get:
       consumes:
       - application/json
@@ -213,7 +211,7 @@ paths:
       summary: Get html properties
       tags:
       - HTML
-  /v1/initialize:
+  /api/initialize:
     get:
       consumes:
       - application/json
@@ -237,7 +235,38 @@ paths:
       summary: Get initialize secret to get access
       tags:
       - Authentication
-  /v1/kick-ip-address:
+  /api/is-exist-initialize-secret:
+    post:
+      consumes:
+      - application/json
+      description: Exist initialize secret
+      operationId: is-exist-initialize-secret
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.InitializedType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: found
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Exist initialize secret
+      tags:
+      - Authentication
+  /api/kick-ip-address:
     put:
       consumes:
       - application/json
@@ -270,7 +299,7 @@ paths:
       summary: To kick via ip address
       tags:
       - Operator
-  /v1/kick-username:
+  /api/kick-username:
     put:
       consumes:
       - application/json
@@ -303,7 +332,7 @@ paths:
       summary: To kick via username
       tags:
       - Operator
-  /v1/revoke-administrator:
+  /api/revoke-administrator:
     get:
       consumes:
       - application/json
@@ -329,7 +358,7 @@ paths:
       summary: Revoke administrator
       tags:
       - Operator
-  /v1/sign-out:
+  /api/sign-out:
     get:
       consumes:
       - application/json
@@ -353,7 +382,7 @@ paths:
       summary: Sign out
       tags:
       - Authentication
-  /v1/signed:
+  /api/signed:
     get:
       consumes:
       - application/json

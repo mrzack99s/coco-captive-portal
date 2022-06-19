@@ -15,7 +15,7 @@ interface ApiPros {
 
 const ApiProvider: React.FC<ApiPros> = ({ children }) => {
     const apiConnector = new Api({
-        baseUrl: process.env.REACT_APP_ENV === "production" ? "/api" : `${process.env.REACT_APP_API_URL}/api`,
+        baseUrl: process.env.REACT_APP_ENV === "production" ? "" : `${process.env.REACT_APP_API_URL}`,
 
     })
     return <ApiContext.Provider value={{ instance: apiConnector }}>{children}</ApiContext.Provider>;

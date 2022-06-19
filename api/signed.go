@@ -21,8 +21,8 @@ import (
 // @Success 200 {object} types.SessionType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/signed [get]
-func (ctl *controller) getSigned(c *gin.Context) {
+// @Router /api/signed [get]
+func (ctl *authController) getSigned(c *gin.Context) {
 
 	clientIp := c.ClientIP()
 
@@ -30,7 +30,6 @@ func (ctl *controller) getSigned(c *gin.Context) {
 	sessionId, err := utils.CacheGetString(constants.MAP_IP_TO_SESSION, clientIp)
 	if err != nil {
 		msg := fmt.Sprintf("not found session of %s", clientIp)
-		config.AppLog.Error().Msg(msg)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg": msg,
 		})
@@ -61,8 +60,8 @@ func (ctl *controller) getSigned(c *gin.Context) {
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/adm-signed [get]
-func (ctl *controller) getAdminSigned(c *gin.Context) {
+// @Router /api/adm-signed [get]
+func (ctl *operatorController) getAdminSigned(c *gin.Context) {
 
 	// Get session by ip address
 	_, err := utils.CacheGetString("temp", "admtoken")

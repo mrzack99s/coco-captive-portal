@@ -29,10 +29,8 @@ const SignIn = () => {
     const setPageWaiting = usePageWaiting();
     const [redirectUrl, setRedirectUrl] = useRedirectURL();
 
-    const goLogin = (event: { preventDefault: () => void }) => {
-        event.preventDefault();
-        setPageWaiting(true);
-        apiInstance.v1
+    const goLogin = () => {
+        apiInstance.api
             .authentication({
                 username: username,
                 password: password,
@@ -43,7 +41,7 @@ const SignIn = () => {
                 toast.current.show({
                     severity: "success",
                     summary: "Success",
-                    detail: "Signed",
+                    detail: lang == "en" ? "Signed" : "เข้าสู่ระบบแล้ว",
                     life: 3000,
                 });
                 setRedirectUrl(res.redirect_url!);
@@ -62,11 +60,44 @@ const SignIn = () => {
                 toast.current.show({
                     severity: "error",
                     summary: "Error",
-                    detail: "Wrong credential!",
+                    detail: lang == "en" ? "Wrong credential!" : "ข้อมูลประจำตัวไม่ถูกต้อง",
                     life: 3000,
                 });
                 setPageWaiting(false);
             });
+    }
+    const verify = (event: { preventDefault: () => void }) => {
+        event.preventDefault();
+        setPageWaiting(true);
+        apiInstance.api
+            .isExistInitializeSecret({
+                secret: initSecret,
+            })
+            .then(() => {
+                goLogin()
+            })
+            .catch(() => {
+                apiInstance.api
+                    .initialize()
+                    .then(res => res.data)
+                    .then((res) => {
+                        setInitSecret(res.secret!)
+                        goLogin()
+                    })
+                    .catch(() => {
+                        toast.current.show({
+                            severity: "error",
+                            summary: "Error",
+                            detail: lang == "en" ? "Not found initial secret, reload in 3 seconds" : "ไม่พบเซสชันเริ่มต้น, รีโหลดตัวเองใน 3 วินาที",
+                            life: 3000,
+                        });
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 3000)
+
+                    })
+            })
+
     };
 
     return (
@@ -130,7 +161,7 @@ const SignIn = () => {
                                     </>
                                 )}
                             </p>
-                            <form onSubmit={goLogin}>
+                            <form onSubmit={verify}>
                                 <div className="p-inputgroup  m-2">
                                     <span className="p-inputgroup-addon">
                                         <i className="pi pi-user" />

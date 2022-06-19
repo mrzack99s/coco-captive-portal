@@ -76,15 +76,24 @@ func GenerateSelfSignCert() {
 	}
 	out := &bytes.Buffer{}
 	pem.Encode(out, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes})
-	err = ioutil.WriteFile("./certs/fullchain.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile("./certs/authfullchain.pem", out.Bytes(), 0744)
 	if err != nil {
-		config.AppLog.Error().Msg("Failed to write cert file")
+		config.AppLog.Error().Msg("Failed to write auth cert file")
 	}
+	err = ioutil.WriteFile("./certs/operatorfullchain.pem", out.Bytes(), 0744)
+	if err != nil {
+		config.AppLog.Error().Msg("Failed to write operator cert file")
+	}
+
 	out.Reset()
 	pem.Encode(out, pemBlockForKey(priv))
-	err = ioutil.WriteFile("./certs/privkey.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile("./certs/authprivkey.pem", out.Bytes(), 0744)
 	if err != nil {
-		config.AppLog.Error().Msg("Failed to write key file")
+		config.AppLog.Error().Msg("Failed to write auth key file")
+	}
+	err = ioutil.WriteFile("./certs/operatorprivkey.pem", out.Bytes(), 0744)
+	if err != nil {
+		config.AppLog.Error().Msg("Failed to write operator key file")
 	}
 	config.AppLog.Info().Msg("Generate a self-signed certificate success")
 }

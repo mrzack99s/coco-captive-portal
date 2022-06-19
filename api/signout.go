@@ -22,8 +22,8 @@ import (
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/sign-out [get]
-func (ctl *controller) signout(c *gin.Context) {
+// @Router /api/sign-out [get]
+func (ctl *authController) signout(c *gin.Context) {
 
 	clientIp := c.ClientIP()
 

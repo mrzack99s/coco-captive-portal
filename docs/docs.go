@@ -20,7 +20,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/v1/adm-signed": {
+        "/api/adm-signed": {
             "get": {
                 "description": "Get admin signed",
                 "consumes": [
@@ -56,7 +56,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/authentication": {
+        "/api/authentication": {
             "post": {
                 "description": "Check credential to get access",
                 "consumes": [
@@ -103,13 +103,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/check-is-administrator": {
+        "/api/check-is-administrator": {
             "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Check is administrator",
                 "consumes": [
                     "application/json"
@@ -155,7 +150,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/get-all-session": {
+        "/api/get-all-session": {
             "get": {
                 "security": [
                     {
@@ -199,7 +194,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/html-properties": {
+        "/api/html-properties": {
             "get": {
                 "description": "Get html properties",
                 "consumes": [
@@ -235,7 +230,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/initialize": {
+        "/api/initialize": {
             "get": {
                 "description": "Get initialize secret to get access",
                 "consumes": [
@@ -271,7 +266,54 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/kick-ip-address": {
+        "/api/is-exist-initialize-secret": {
+            "post": {
+                "description": "Exist initialize secret",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Exist initialize secret",
+                "operationId": "is-exist-initialize-secret",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.InitializedType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/kick-ip-address": {
             "put": {
                 "security": [
                     {
@@ -323,7 +365,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/kick-username": {
+        "/api/kick-username": {
             "put": {
                 "security": [
                     {
@@ -375,7 +417,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/revoke-administrator": {
+        "/api/revoke-administrator": {
             "get": {
                 "security": [
                     {
@@ -416,7 +458,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/sign-out": {
+        "/api/sign-out": {
             "get": {
                 "description": "Sign out",
                 "consumes": [
@@ -452,7 +494,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/signed": {
+        "/api/signed": {
             "get": {
                 "description": "Get signed by ip address",
                 "consumes": [
@@ -601,7 +643,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0.0",
+	Version:          "1",
 	Host:             "",
 	BasePath:         "/api",
 	Schemes:          []string{},

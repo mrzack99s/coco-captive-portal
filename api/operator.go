@@ -25,8 +25,8 @@ import (
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/kick-username [put]
-func (ctl *controller) kickSessionViaUsername(c *gin.Context) {
+// @Router /api/kick-username [put]
+func (ctl *operatorController) kickSessionViaUsername(c *gin.Context) {
 	var ss types.SessionType
 	if err := c.ShouldBind(&ss); err != nil {
 		msg := "kick: bind an interface failed"
@@ -88,8 +88,8 @@ func (ctl *controller) kickSessionViaUsername(c *gin.Context) {
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/kick-ip-address [put]
-func (ctl *controller) kickSessionViaIPAddress(c *gin.Context) {
+// @Router /api/kick-ip-address [put]
+func (ctl *operatorController) kickSessionViaIPAddress(c *gin.Context) {
 	var ss types.SessionType
 	if err := c.ShouldBind(&ss); err != nil {
 		msg := "kick: bind an interface failed"
@@ -146,8 +146,8 @@ func (ctl *controller) kickSessionViaIPAddress(c *gin.Context) {
 // @Success 200 {array} types.SessionType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/get-all-session [get]
-func (ctl *controller) getAllSession(c *gin.Context) {
+// @Router /api/get-all-session [get]
+func (ctl *operatorController) getAllSession(c *gin.Context) {
 	allSession := []types.SessionType{}
 	allKey, err := utils.CacheGetAllKey(constants.SESSION)
 	if err != nil {
@@ -184,13 +184,12 @@ func (ctl *controller) getAllSession(c *gin.Context) {
 // @Accept   json
 // @Tags	Operator
 // @Produce  json
-// @security ApiKeyAuth
 // @Param params body types.CredentialType true "Parameters"
 // @Success 200 {object} gin.H
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/check-is-administrator [post]
-func (ctl *controller) checkIsAdministrator(c *gin.Context) {
+// @Router /api/check-is-administrator [post]
+func (ctl *operatorController) checkIsAdministrator(c *gin.Context) {
 	var ss types.CredentialType
 	if err := c.ShouldBind(&ss); err != nil {
 		msg := "admin: bind an interface failed"
@@ -234,8 +233,8 @@ func (ctl *controller) checkIsAdministrator(c *gin.Context) {
 // @Success 200 {string} string "ok"
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/revoke-administrator [get]
-func (ctl *controller) revokeAdministrator(c *gin.Context) {
+// @Router /api/revoke-administrator [get]
+func (ctl *operatorController) revokeAdministrator(c *gin.Context) {
 	var ss types.CredentialType
 	if err := c.ShouldBind(&ss); err != nil {
 		msg := "admin: bind an interface failed"

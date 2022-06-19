@@ -32,3 +32,6 @@ allow_endpoints: # To allow access to endpoint without captive portal
 administrator: # To set admin monitoring credential
   username: admin
   password: P@ssw0rd
+domain_names: # To provide a domain name
+  operator_domain_name:  # To provide a domain name for operator
+  auth_domain_name: # To provide a domain name for user access to authentication

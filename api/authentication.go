@@ -24,8 +24,8 @@ import (
 // @Success 200 {object} types.AuthorizedResponseType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /v1/authentication [post]
-func (ctl *controller) getAuthentication(c *gin.Context) {
+// @Router /api/authentication [post]
+func (ctl *authController) getAuthentication(c *gin.Context) {
 
 	clientIp := c.ClientIP()
 

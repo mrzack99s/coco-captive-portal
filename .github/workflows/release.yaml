@@ -16,21 +16,29 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: "^1.17"
-      - name: Setup node 16
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "16"
       - name: Install package
         run: |
           sudo apt install -y build-essential libpcap0.8-dev make
-      - name: Build UI
-        working-directory: ./sign-in-ui
+      - name: Build Auth UI
+        working-directory: ./sign-in-dev
         run: |
           yarn install 
           yarn build
-          mv build dist-ui
-          tar -czf dist-ui.tar.gz dist-ui/*
-          mv dist-ui.tar.gz ../dist-ui.tar.gz
+          mv build dist-auth-ui
+          tar -czf dist-auth-ui.tar.gz dist-auth-ui/*
+          mv dist-auth-ui.tar.gz ../dist-auth-ui.tar.gz
+      - name: Build Operator UI
+        working-directory: ./operator-dev
+        run: |
+          yarn install 
+          yarn build
+          mv build dist-operator-ui
+          tar -czf dist-operator-ui.tar.gz dist-operator-ui/*
+          mv dist-operator-ui.tar.gz ../dist-operator-ui.tar.gz
       - name: Build CoCo Captive Portal
         run: |
           make build
@@ -45,5 +53,6 @@ jobs:
             coco-installer
             config.yaml.sample
             coco-captive-portal.service
-            dist-ui.tar.gz
+            dist-auth-ui.tar.gz
+            dist-operator-ui.tar.gz
             LICENSE

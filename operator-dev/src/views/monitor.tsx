@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useAdminApiConnector } from '../../utils/api-connector';
+import { useAdminApiConnector } from '../utils/api-connector';
 import { useNavigate } from 'react-router';
-import { useToast } from '../../utils/properties';
+import { useToast } from '../utils/properties';
 import { Menubar } from 'primereact/menubar';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { TypesSessionType } from '../../api';
+import { TypesSessionType } from '../api';
 import { useCookies } from 'react-cookie';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
-import { Copyright } from '../../components/copyright';
+import { Copyright } from '../components/copyright';
 
 function Monitor() {
     /* eslint-disable */
@@ -36,7 +36,7 @@ function Monitor() {
     );
 
     const accept = () => {
-        apiInstance.v1.kickViaIpAddress(kickSelected)
+        apiInstance.api.kickViaIpAddress(kickSelected)
             .then(() => {
                 toast.current.show({ severity: 'success', summary: 'Success', detail: `${kickSelected.ip_address} kicked`, life: 3000 });
                 setRefresh(!refresh)
@@ -69,7 +69,7 @@ function Monitor() {
     }, [kickSelected])
 
     const revokeAdmin = () => {
-        apiInstance.v1.revokeAdministrator()
+        apiInstance.api.revokeAdministrator()
         removeCookies("api-token")
         toast.current.show({ severity: 'success', summary: 'Success', detail: `Sigend out`, life: 3000 });
         navigate("/operator/sign-in")
@@ -77,7 +77,7 @@ function Monitor() {
 
     const getData = () => {
         setLading(true)
-        apiInstance.v1.getAllSession()
+        apiInstance.api.getAllSession()
             .then(res => res.data)
             .then(res => {
                 setData(res!)

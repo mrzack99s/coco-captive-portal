@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
-import { useApiConnector } from '../../utils/api-connector';
+import { useApiConnector } from '../utils/api-connector';
 import { useNavigate } from 'react-router';
-import { useHtmlProperties, useLang, usePageWaiting, useToast } from '../../utils/properties';
+import { useHtmlProperties, useLang, usePageWaiting, useToast } from '../utils/properties';
 import { Password } from 'primereact/password';
 import { useCookies } from 'react-cookie';
-import { Copyright } from '../../components/copyright';
+import { Copyright } from '../components/copyright';
 
 /* eslint-disable */
 function SignIn() {
@@ -23,7 +23,7 @@ function SignIn() {
     const goLogin = (event: { preventDefault: () => void; }) => {
         event.preventDefault()
         setPageWaiting(true)
-        apiInstance.v1.checkIsAdministrator({
+        apiInstance.api.checkIsAdministrator({
             username: username,
             password: password,
         })
@@ -52,7 +52,7 @@ function SignIn() {
                 <div className="grid grid-nogutter p-fluid h-screen bg-bluegray-50">
                     <div className="hidden lg:flex col-7 grid-nogutter overflow-hidden p-0">
                         <img
-                            src={htmlProperties.background_file_name ? require(`../../assets/${htmlProperties.background_file_name!}`) : require("../../assets/bg-01.jpg")}
+                            src={htmlProperties.background_file_name ? require(`../assets/${htmlProperties.background_file_name!}`) : require("../assets/bg-01.jpg")}
                             className="relative ml-auto block w-full h-full"
                             style={{
                                 padding: 0,
@@ -63,7 +63,7 @@ function SignIn() {
                     <div className="col grid-nogutter p-8 text-left flex align-items-center justify-content-center">
                         <section>
                             <img className="relative mx-auto block"
-                                src={htmlProperties.logo_file_name ? require(`../../assets/${htmlProperties.logo_file_name!}`) : require("../../assets/logo.png")}
+                                src={htmlProperties.logo_file_name ? require(`../assets/${htmlProperties.logo_file_name!}`) : require("../assets/logo.png")}
                                 style={{ maxWidth: '160px' }} />
                             <span className="block text-center text-6xl text-primary font-bold mb-1">
                                 {lang === "en" ? "Session Monitor" : "ตัวตรวจสอบเซสชัน"}

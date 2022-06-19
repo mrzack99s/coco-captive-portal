@@ -9,7 +9,7 @@ import (
 )
 
 // @title COCO Captive Portal
-// @version 1.0.0
+// @version 1
 // @description This is a COCO Captive Portal
 
 // @license.name Apache License Version 2.0

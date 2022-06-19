@@ -15,6 +15,10 @@ type ConfigType struct {
 	LDAP                 *authentication.LDAPEndpointType   `yaml:"ldap"`
 	HTML                 HTMLType                           `yaml:"html"`
 	Administrator        CredentialType                     `yaml:"administrator"`
+	DomainNames          struct {
+		OperatorDomainName string `yaml:"operator_domain_name"`
+		AuthDomainName     string `yaml:"auth_domain_name"`
+	} `yaml:"domain_names"`
 }
 
 type EndpointType struct {

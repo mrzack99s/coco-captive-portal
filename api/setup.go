@@ -8,12 +8,24 @@ import (
 	"github.com/mrzack99s/coco-captive-portal/utils"
 )
 
-type controller struct {
+type authController struct {
 	router gin.IRouter
 }
 
-func NewController(router gin.IRouter) *controller {
-	s := &controller{
+type operatorController struct {
+	router gin.IRouter
+}
+
+func NewAuthController(router gin.IRouter) *authController {
+	s := &authController{
+		router: router,
+	}
+	s.register()
+	return s
+}
+
+func NewOperatorController(router gin.IRouter) *operatorController {
+	s := &operatorController{
 		router: router,
 	}
 	s.register()
@@ -42,19 +54,21 @@ func tokenMiddleware(c *gin.Context) {
 
 }
 
-func (ctl *controller) register() {
-	api := ctl.router.Group("/v1")
-	api.GET("/initialize", ctl.getInitialize)
-	api.GET("/sign-out", ctl.signout)
-	api.GET("/signed", ctl.getSigned)
-	api.GET("/adm-signed", ctl.getAdminSigned)
-	api.GET("/html-properties", ctl.getHTMLProperties)
-	api.POST("/authentication", ctl.getAuthentication)
-	api.POST("/check-is-administrator", ctl.checkIsAdministrator)
+func (ctl *authController) register() {
+	ctl.router.GET("/initialize", ctl.getInitialize)
+	ctl.router.GET("/sign-out", ctl.signout)
+	ctl.router.GET("/signed", ctl.getSigned)
+	ctl.router.GET("/html-properties", ctl.getHTMLProperties)
+	ctl.router.POST("/authentication", ctl.getAuthentication)
+	ctl.router.POST("/is-exist-initialize-secret", ctl.isExistInitializeSecret)
+}
 
-	api.PUT("/kick-username", tokenMiddleware, ctl.kickSessionViaUsername)
-	api.PUT("/kick-ip-address", tokenMiddleware, ctl.kickSessionViaIPAddress)
-	api.GET("/get-all-session", tokenMiddleware, ctl.getAllSession)
-	api.GET("/revoke-administrator", tokenMiddleware, ctl.revokeAdministrator)
+func (ctl *operatorController) register() {
 
+	ctl.router.PUT("/kick-username", tokenMiddleware, ctl.kickSessionViaUsername)
+	ctl.router.PUT("/kick-ip-address", tokenMiddleware, ctl.kickSessionViaIPAddress)
+	ctl.router.GET("/get-all-session", tokenMiddleware, ctl.getAllSession)
+	ctl.router.GET("/revoke-administrator", tokenMiddleware, ctl.revokeAdministrator)
+	ctl.router.GET("/adm-signed", ctl.getAdminSigned)
+	ctl.router.POST("/check-is-administrator", ctl.checkIsAdministrator)
 }

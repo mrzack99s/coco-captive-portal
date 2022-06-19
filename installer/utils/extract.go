@@ -12,13 +12,25 @@ func extract() (err error) {
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
 		Name:    "extract coco-dist-ui",
-		Command: *exec.Command("tar", "-zxf", "/tmp/coco-dist-ui.tar.gz", "--directory", APP_DIR),
+		Command: *exec.Command("tar", "-zxf", "/tmp/coco-dist-auth-ui.tar.gz", "--directory", APP_DIR),
+	})
+
+	cmds = append(cmds, CommandType{
+		Type:    COMMAND_EXEC_TYPE,
+		Name:    "extract coco-dist-ui",
+		Command: *exec.Command("tar", "-zxf", "/tmp/coco-dist-operator-ui.tar.gz", "--directory", APP_DIR),
 	})
 
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
 		Name:    "remove temp coco-dist-ui",
-		Command: *exec.Command("rm", "-rf", "/tmp/coco-dist-ui.tar.gz"),
+		Command: *exec.Command("rm", "-rf", "/tmp/coco-dist-auth-ui.tar.gz"),
+	})
+
+	cmds = append(cmds, CommandType{
+		Type:    COMMAND_EXEC_TYPE,
+		Name:    "remove temp coco-dist-ui",
+		Command: *exec.Command("rm", "-rf", "/tmp/coco-dist-operator-ui.tar.gz"),
 	})
 
 	for _, cmd := range cmds {

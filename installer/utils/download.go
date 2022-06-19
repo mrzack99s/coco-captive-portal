@@ -32,9 +32,15 @@ func downloadPackages() (err error) {
 	})
 
 	packages = append(packages, DownloadType{
-		Name:            "coco-dist-ui",
-		URL:             "https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/dist-ui.tar.gz",
-		DestinationFile: "/tmp/coco-dist-ui.tar.gz",
+		Name:            "coco-dist-auth-ui",
+		URL:             "https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/dist-auth-ui.tar.gz",
+		DestinationFile: "/tmp/coco-dist-auth-ui.tar.gz",
+	})
+
+	packages = append(packages, DownloadType{
+		Name:            "coco-dist-operator-ui",
+		URL:             "https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/dist-operator-ui.tar.gz",
+		DestinationFile: "/tmp/coco-dist-operator-ui.tar.gz",
 	})
 
 	for _, dl := range packages {
