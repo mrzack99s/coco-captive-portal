@@ -92,7 +92,7 @@ function Monitor() {
     useEffect(() => {
         setInterval(() => {
             getData()
-        }, 15000)
+        }, 5000)
     }, [mounted])
 
 

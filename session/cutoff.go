@@ -20,7 +20,7 @@ func CutOffSession(sessionUUID string) (err error) {
 		return
 	}
 
-	err = utils.CacheDelete(constants.SESSION, sessionUUID)
+	err = utils.CacheDelete(constants.SESSION, ss.SessionUUID)
 	if err != nil {
 		return
 	}
