@@ -26,11 +26,11 @@ interface AppProperties {
 }
 
 const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
-
+    // eslint-disable-next-line
     const [issue, setIssue] = useState("")
     const [redirectUrl, setRedirectUrl] = useState("")
-    const [defaultLangSet, setDefaultLangSet] = useState(false)
     const [initSecret, setInitSecret] = useState("")
+    // eslint-disable-next-line
     const [htmlProperties, setHtmlProperties] = useState({} as TypesHTMLType)
     const navigate = useNavigate()
     const location = useLocation();
