@@ -3,7 +3,6 @@ import { Button } from 'primereact/button'
 import { useApiConnector } from '../utils/api-connector';
 import { useNavigate } from 'react-router';
 import { useHtmlProperties, useLang, useToast } from '../utils/properties';
-import { Copyright } from '../components/copyright';
 
 /* eslint-disable */
 const KeepAlive = () => {
@@ -85,10 +84,7 @@ const KeepAlive = () => {
                                 }} className='p-button-sm' label={lang === "en" ? "Open keepalive popup" : "เปิดป๊อปอัพหน้าสถานะ"} icon="pi pi-external-link" />
                             </span>
                             <Button onClick={() => { signOut() }} className='p-button-sm mt-1 p-button-danger' label={lang === "en" ? "Sign-out" : "ออกจากระบบ"} icon="pi pi-times" />
-
                         </section>
-
-                        <Copyright />
                     </div>
                 </div>
             </div>

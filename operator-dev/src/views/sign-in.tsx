@@ -104,8 +104,8 @@ function SignIn() {
                                     className="p-button m-2"
                                 />
                             </form>
+                            <Copyright />
                         </section>
-                        <Copyright />
                     </div>
                 </div>
             </div>

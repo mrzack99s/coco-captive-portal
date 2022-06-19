@@ -73,10 +73,18 @@ func authRuntime(flag ...bool) {
 
 	if flag[0] {
 
-		if config.Config.ExternalPortalURL != "" {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
+		if config.Config.DomainNames.AuthDomainName != "" {
+			if config.Config.ExternalPortalURL != "" {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName), config.Config.ExternalPortalURL}
+			} else {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName)}
+			}
 		} else {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
+			if config.Config.ExternalPortalURL != "" {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
+			} else {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
+			}
 		}
 
 		corsConfig.AllowAllOrigins = false
@@ -84,6 +92,7 @@ func authRuntime(flag ...bool) {
 		router.Use(cors.New(corsConfig))
 		apiEndpoint := router.Group("/api")
 		api.NewAuthController(apiEndpoint)
+
 		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), "./certs/authfullchain.pem", "./certs/authprivkey.pem")
 		if err != nil {
 			config.AppLog.Error().Msg(err.Error())
@@ -124,11 +133,18 @@ func operatorRuntime(flag ...bool) {
 	}
 
 	if flag[0] {
-
-		if config.Config.ExternalPortalURL != "" {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
+		if config.Config.DomainNames.OperatorDomainName != "" {
+			if config.Config.ExternalPortalURL != "" {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", config.Config.DomainNames.OperatorDomainName), config.Config.ExternalPortalURL}
+			} else {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", config.Config.DomainNames.OperatorDomainName)}
+			}
 		} else {
-			corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
+			if config.Config.ExternalPortalURL != "" {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp), config.Config.ExternalPortalURL}
+			} else {
+				corsConfig.AllowOrigins = []string{fmt.Sprintf("https://%s", interfaceIp)}
+			}
 		}
 
 		corsConfig.AllowAllOrigins = false

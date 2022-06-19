@@ -172,8 +172,9 @@ function Monitor() {
                             />
                         </DataTable>
                     </div>
+                    <Copyright />
                 </div>
-                <Copyright />
+
             </div>
 
         </div>
