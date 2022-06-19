@@ -4,16 +4,12 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"time"
 
 	"github.com/mrzack99s/coco-captive-portal/utils"
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 func resourceVerify(ignore bool) {
-
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
 
 	current, err := user.Current()
 	if err != nil {

@@ -13,3 +13,9 @@ type DownloadType struct {
 	URL             string
 	DestinationFile string
 }
+
+type ReplaceWordInFileType struct {
+	OldWord string
+	NewWord string
+	File    string
+}

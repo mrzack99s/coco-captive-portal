@@ -25,18 +25,6 @@ func finally() (err error) {
 
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
-		Name:    "enable net.ipv4.ip_forward",
-		Command: *exec.Command("sed", "-i", "'s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/'", "/etc/sysctl.conf"),
-	})
-
-	cmds = append(cmds, CommandType{
-		Type:    COMMAND_EXEC_TYPE,
-		Name:    "commit enable net.ipv4.ip_forward",
-		Command: *exec.Command("sysctl", "-p"),
-	})
-
-	cmds = append(cmds, CommandType{
-		Type:    COMMAND_EXEC_TYPE,
 		Name:    "enable redis service",
 		Command: *exec.Command("systemctl", "enable", "--now", "redis-server"),
 	})
@@ -60,6 +48,39 @@ func finally() (err error) {
 		} else {
 			log.Info().Msg(getMessage(cmd, DONE_STATE))
 		}
+	}
+
+	enableForward := ReplaceWordInFileType{
+		OldWord: "#net.ipv4.ip_forward=1",
+		NewWord: "net.ipv4.ip_forward=1",
+		File:    "/etc/sysctl.conf",
+	}
+	if e := Replace(enableForward); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msg("replace was failed")
+		} else {
+			log.Error().Msg("replace was failed")
+			err = e
+			return
+		}
+	}
+
+	cmd := CommandType{
+		Type:    COMMAND_EXEC_TYPE,
+		Name:    "commit enable net.ipv4.ip_forward",
+		Command: *exec.Command("sysctl", "-p"),
+	}
+	log.Info().Msg(getMessage(cmd, DOING_STATE))
+	if e := cmd.Command.Run(); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msg(getMessage(cmd, FAILED_STATE))
+		} else {
+			log.Error().Msg(getMessage(cmd, FAILED_STATE))
+			err = e
+			return
+		}
+	} else {
+		log.Info().Msg(getMessage(cmd, DONE_STATE))
 	}
 
 	return

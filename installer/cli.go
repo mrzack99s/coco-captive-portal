@@ -1,11 +1,18 @@
 package main
 
 import (
+	"os"
+	"time"
+
+	"github.com/rs/zerolog/log"
+
 	installer_utils "github.com/mrzack99s/coco-captive-portal/installer/utils"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 )
 
 func main() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
 
 	var cmdUp = &cobra.Command{
 		Use:   "up",

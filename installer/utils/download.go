@@ -11,7 +11,6 @@ import (
 
 func downloadPackages() (err error) {
 	packages := []DownloadType{}
-	log.Info().Msg("# download coco-captive-portal packages")
 
 	packages = append(packages, DownloadType{
 		Name:            "coco-captive-portal",

@@ -8,7 +8,6 @@ import (
 
 func installPackages() (err error) {
 	packages := []CommandType{}
-	log.Info().Msg("# install packages")
 	switch si.OS.Vendor {
 	case "ubuntu":
 		packages = append(packages, CommandType{
