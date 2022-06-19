@@ -54,7 +54,25 @@ sudo ./coco-installer up --ignore
 sudo ./coco-installer purge
 ```
 
-## To use an api
+## Certificates
+
+- Need a certificates in **_certs_** directory
+  - For Auth Endpoint
+    - **authfullchain.pem**
+    - **authprivkey.pem**
+  - For Auth Endpoint
+    - **operatorfullchain.pem**
+    - **operatorprivkey.pem**
+  - For LDAP (Optional)
+    - **ldapchain.pem**
+    - **ldapprivkey.pem**
+- to auto generate self-signed certificate
+
+```bash
+/var/coco-captive-portal/coco gencert
+```
+
+## API
 
 - API Token will store in file **_app_credentials.yaml_**
 - For renew api token

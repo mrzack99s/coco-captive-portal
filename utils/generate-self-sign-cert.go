@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/mrzack99s/coco-captive-portal/config"
+	"github.com/mrzack99s/coco-captive-portal/constants"
 )
 
 func publicKey(priv interface{}) interface{} {
@@ -76,22 +77,22 @@ func GenerateSelfSignCert() {
 	}
 	out := &bytes.Buffer{}
 	pem.Encode(out, &pem.Block{Type: "CERTIFICATE", Bytes: derBytes})
-	err = ioutil.WriteFile("./certs/authfullchain.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile(constants.APP_DIR+"/certs/authfullchain.pem", out.Bytes(), 0744)
 	if err != nil {
 		config.AppLog.Error().Msg("Failed to write auth cert file")
 	}
-	err = ioutil.WriteFile("./certs/operatorfullchain.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile(constants.APP_DIR+"/certs/operatorfullchain.pem", out.Bytes(), 0744)
 	if err != nil {
 		config.AppLog.Error().Msg("Failed to write operator cert file")
 	}
 
 	out.Reset()
 	pem.Encode(out, pemBlockForKey(priv))
-	err = ioutil.WriteFile("./certs/authprivkey.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile(constants.APP_DIR+"/certs/authprivkey.pem", out.Bytes(), 0744)
 	if err != nil {
 		config.AppLog.Error().Msg("Failed to write auth key file")
 	}
-	err = ioutil.WriteFile("./certs/operatorprivkey.pem", out.Bytes(), 0744)
+	err = ioutil.WriteFile(constants.APP_DIR+"/certs/operatorprivkey.pem", out.Bytes(), 0744)
 	if err != nil {
 		config.AppLog.Error().Msg("Failed to write operator key file")
 	}
