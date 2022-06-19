@@ -109,7 +109,7 @@ sudo systemctl enable --now coco-captive-portal
 
 ## License
 
-Copyright (c) 2021 [CoCo Captive Portal](https://github.com/mrzack99s/coco-captive-portal)
+Copyright (c) 2022 [CoCo Captive Portal](https://github.com/mrzack99s/coco-captive-portal)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
