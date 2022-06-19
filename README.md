@@ -1,6 +1,6 @@
 # CoCo Captive Portal
 
-CoCo Captive Portal, an extremely simple, lightning fast authentication system.
+CoCo Captive Portal an authentication system. it's extremely simple, lightning fast installer.
 
 ## Download
 
@@ -14,6 +14,13 @@ Please check the [releases](https://github.com/mrzack99s/coco-captive-portal/rel
 - OS
   - Ubuntu: 18.04, 20.04
   - Debian: 10, 11
+
+## Authentication protocol supports
+
+- LDAP
+  - Google LDAP (G-Suite)
+  - Active Directory
+- Radius
 
 ## Getting Started
 
