@@ -117,12 +117,12 @@ func initFinally() (err error) {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
+	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
+	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
 	if err != nil {
 		return
 	}

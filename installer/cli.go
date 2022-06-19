@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"os/user"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -13,6 +14,16 @@ import (
 
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
+	current, err := user.Current()
+	if err != nil {
+		log.Error().Msg(err.Error())
+		os.Exit(0)
+	}
+
+	if current.Uid != "0" {
+		log.Error().Msg("this application needs the ability to run commands as root. We are unable to find either \"sudo\" or \"su\" available to make this happen.")
+		os.Exit(0)
+	}
 
 	var cmdUp = &cobra.Command{
 		Use:   "up",
