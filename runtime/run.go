@@ -103,7 +103,7 @@ func authRuntime(flag ...bool) {
 }
 
 func operatorRuntime(flag ...bool) {
-	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
+	interfaceIp, _ := utils.GetEgressInterfaceIpv4Addr()
 
 	router := gin.Default()
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
