@@ -1,6 +1,6 @@
 # CoCo Captive Portal
 
-CoCo Captive Portal an authentication system. it's extremely simple, lightning fast installer.
+CoCo Captive Portal is a network security application. it's extremely simple, lightning fast installer.
 
 ## Download
 
