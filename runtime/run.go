@@ -51,10 +51,6 @@ func authRuntime(flag ...bool) {
 	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
 
 	router := gin.Default()
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	router.GET("/docs", func(c *gin.Context) {
-		c.Redirect(http.StatusFound, "/docs/index.html")
-	})
 
 	if config.Config.ExternalPortalURL == "" {
 		router.Use(static.Serve("/", static.LocalFile("dist-auth-ui", true)))
@@ -119,10 +115,14 @@ func operatorRuntime(flag ...bool) {
 	router.GET("/docs", func(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/docs/index.html")
 	})
-	router.Use(static.Serve("/", static.LocalFile("dist-operator-ui", true)))
-	router.NoRoute(func(c *gin.Context) {
-		c.File("dist-operator-ui/index.html")
-	})
+
+	if config.Config.Administrator.Username != "" && config.Config.Administrator.Password != "" {
+		router.Use(static.Serve("/", static.LocalFile("dist-operator-ui", true)))
+		router.NoRoute(func(c *gin.Context) {
+			c.File("dist-operator-ui/index.html")
+		})
+
+	}
 
 	corsConfig := cors.Config{
 		AllowMethods:     []string{"GET", "POST", "PUT"},
@@ -158,7 +158,6 @@ func operatorRuntime(flag ...bool) {
 			return
 		}
 	} else {
-		fmt.Println("sadasd")
 		router.Use(cors.New(corsConfig))
 		apiEndpoint := router.Group("/api")
 		api.NewOperatorController(apiEndpoint)

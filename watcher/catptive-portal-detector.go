@@ -38,26 +38,14 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							if config.Config.DomainNames.AuthDomainName != "" {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
-								return
-							} else {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-								return
-							}
+							redirect(c, intIp)
 						}
 					} else {
 						if config.Config.ExternalPortalURL != "" {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							if config.Config.DomainNames.AuthDomainName != "" {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
-								return
-							} else {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-								return
-							}
+							redirect(c, intIp)
 						}
 					}
 				})
@@ -66,13 +54,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 						c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 						return
 					} else {
-						if config.Config.DomainNames.AuthDomainName != "" {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
-							return
-						} else {
-							c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-							return
-						}
+						redirect(c, intIp)
 					}
 				})
 				err := router.Run(fmt.Sprintf("%s:8080", intIp))
@@ -109,13 +91,7 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							if config.Config.DomainNames.AuthDomainName != "" {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
-								return
-							} else {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-								return
-							}
+							redirect(c, intIp)
 
 						}
 					} else {
@@ -123,24 +99,16 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 							c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 							return
 						} else {
-							if config.Config.DomainNames.AuthDomainName != "" {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
-								return
-							} else {
-								c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-								return
-							}
-
+							redirect(c, intIp)
 						}
 					}
 				})
 				router.NoRoute(func(c *gin.Context) {
-					if config.Config.DomainNames.AuthDomainName != "" {
-						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
+					if config.Config.ExternalPortalURL != "" {
+						c.Redirect(http.StatusFound, config.Config.ExternalPortalURL)
 						return
 					} else {
-						c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
-						return
+						redirect(c, intIp)
 					}
 				})
 
@@ -152,4 +120,16 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 			}
 		}
 	}(ctx, flag...)
+}
+
+func redirect(c *gin.Context, intIp string) {
+
+	if config.Config.DomainNames.AuthDomainName != "" {
+		c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", config.Config.DomainNames.AuthDomainName))
+		return
+	} else {
+		c.Redirect(http.StatusFound, fmt.Sprintf("https://%s", intIp))
+		return
+	}
+
 }

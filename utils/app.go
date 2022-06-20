@@ -3,7 +3,6 @@ package utils
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/mrzack99s/coco-captive-portal/constants"
 	"gopkg.in/yaml.v3"
@@ -16,18 +15,6 @@ type AppCredentialsType struct {
 var (
 	AppCredentials AppCredentialsType = AppCredentialsType{}
 )
-
-func SetupAppCredential() (err error) {
-	_, err = os.Stat("./app_credentials.yaml")
-	if os.IsNotExist(err) {
-		err = GenerateApiToken()
-		if err != nil {
-			return
-		}
-
-	}
-	return
-}
 
 func GenerateApiToken() (err error) {
 	appCredential := AppCredentialsType{

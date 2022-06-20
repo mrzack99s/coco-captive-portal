@@ -54,7 +54,6 @@ func main() {
 
 	// Setup Cache
 	utils.SetupCache()
-	utils.SetupAppCredential()
 	utils.CacheDeleteWithPrefix(constants.MAP_IP_TO_SESSION)
 	utils.CacheDeleteWithPrefix(constants.SESSION)
 	utils.CacheDeleteWithPrefix(constants.SESSION_INITIALIZE)

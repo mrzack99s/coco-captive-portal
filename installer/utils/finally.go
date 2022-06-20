@@ -32,7 +32,7 @@ func finally() (err error) {
 	cmds = append(cmds, CommandType{
 		Type:    COMMAND_EXEC_TYPE,
 		Name:    "enable coco-captive-portal service",
-		Command: *exec.Command("systemctl", "enable", "--now", "coco-captive-portal"),
+		Command: *exec.Command("systemctl", "enable", "coco-captive-portal"),
 	})
 
 	for _, cmd := range cmds {

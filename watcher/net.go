@@ -114,7 +114,9 @@ func NetIdleChecking(ctx context.Context) {
 						}
 					} else {
 						ss.LastSeen = time.Now()
-						utils.CacheSet("session", ss.SessionUUID, ss)
+						if utils.CacheFindExistingKey(key) {
+							utils.CacheSet("session", ss.SessionUUID, ss)
+						}
 					}
 				}
 			}
