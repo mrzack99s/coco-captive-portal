@@ -3,7 +3,6 @@ module github.com/mrzack99s/coco-captive-portal
 go 1.17
 
 require (
-	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/coreos/go-iptables v0.6.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/static v0.0.1
