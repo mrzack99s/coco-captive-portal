@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mrzack99s/coco-captive-portal/api"
 	"github.com/mrzack99s/coco-captive-portal/config"
+	"github.com/mrzack99s/coco-captive-portal/constants"
 	_ "github.com/mrzack99s/coco-captive-portal/docs"
 	"github.com/mrzack99s/coco-captive-portal/firewall"
 	"github.com/mrzack99s/coco-captive-portal/utils"
@@ -22,6 +23,17 @@ import (
 
 func AppRunner(flag ...bool) {
 
+	config.ParseConfig()
+	utils.SetupCache()
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_MAP_IP_TO_SESSION)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_SESSION)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_SESSION_INITIALIZE)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_MAP_ISSUE_TO_SESSION)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_DDOS)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_FQDN_BLOCKLIST)
+	utils.CacheDeleteWithPrefix(constants.SCHEMA_DNS_CACHE)
+	utils.CacheDeleteWithPrefix("temp")
+
 	err := firewall.InitializeCaptivePortal()
 	if err != nil {
 		panic(err)
@@ -30,6 +42,10 @@ func AppRunner(flag ...bool) {
 	watcher.NetWatcher(context.Background())
 	watcher.NetIdleChecking(context.Background())
 	watcher.CaptivePortalDetector(context.Background(), flag...)
+
+	if config.Config.DDOSPrevention {
+		watcher.DDOSPreventor(context.Background())
+	}
 
 	if config.Config.LDAP != nil {
 		if err := config.Config.LDAP.Connect(); err != nil {

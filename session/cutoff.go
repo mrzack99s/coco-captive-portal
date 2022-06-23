@@ -10,7 +10,7 @@ import (
 func CutOffSession(sessionUUID string) (err error) {
 
 	ss := types.SessionType{}
-	err = utils.CacheGet(constants.SESSION, sessionUUID, &ss)
+	err = utils.CacheGet(constants.SCHEMA_SESSION, sessionUUID, &ss)
 	if err != nil {
 		return
 	}
@@ -20,17 +20,17 @@ func CutOffSession(sessionUUID string) (err error) {
 		return
 	}
 
-	err = utils.CacheDelete(constants.SESSION, ss.SessionUUID)
+	err = utils.CacheDelete(constants.SCHEMA_SESSION, ss.SessionUUID)
 	if err != nil {
 		return
 	}
 
-	err = utils.CacheDelete(constants.MAP_IP_TO_SESSION, ss.IPAddress)
+	err = utils.CacheDelete(constants.SCHEMA_MAP_IP_TO_SESSION, ss.IPAddress)
 	if err != nil {
 		return
 	}
 
-	err = utils.CacheDelete(constants.MAP_ISSUE_TO_SESSION, ss.Issue)
+	err = utils.CacheDelete(constants.SCHEMA_MAP_ISSUE_TO_SESSION, ss.Issue)
 	if err != nil {
 		return
 	}

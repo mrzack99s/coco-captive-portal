@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import "primereact/resources/themes/fluent-light/theme.css";
@@ -16,8 +15,8 @@ import {
 import SignIn from "./views/sign-in"
 import AppPropertiesProvider from './utils/properties';
 import ApiProvider from './utils/api-connector';
-import Monitor from './views/monitor'
 import { CookiesProvider } from 'react-cookie';
+import Overview from './views/overview';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -30,7 +29,7 @@ root.render(
           <Routes>
             <Route path='*' element={<Navigate to="/sign-in" replace />} />
             <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/monitor" element={<Monitor />} />
+            <Route path="/overview" element={<Overview />} />
           </Routes>
         </AppPropertiesProvider>
       </BrowserRouter>

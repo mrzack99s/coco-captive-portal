@@ -42,6 +42,12 @@ sudo chmod +x coco-installer
 sudo ./coco-installer up
 ```
 
+> Install with lastest version
+
+```bash
+sudo ./coco-installer up --latest
+```
+
 > Install with ignore some verification
 
 ```bash

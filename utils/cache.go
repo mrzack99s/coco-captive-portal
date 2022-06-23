@@ -103,7 +103,7 @@ func CacheGetAllKey(prefix string) (keys []string, err error) {
 	return
 }
 
-func CacheFindExistingKey(key string) bool {
+func CacheFindExistingRawKey(key string) bool {
 	_, err := redisCache.Get(context.Background(), key).Result()
 	if err != redis.Nil {
 		return true
@@ -112,6 +112,14 @@ func CacheFindExistingKey(key string) bool {
 	}
 }
 
+func CacheFindExistingKey(prefix, key string) bool {
+	_, err := redisCache.Get(context.Background(), fmt.Sprintf("%s:%s", prefix, key)).Result()
+	if err != redis.Nil {
+		return true
+	} else {
+		return false
+	}
+}
 func CacheDeleteWithPrefix(prefix string) error {
 	iter := redisCache.Scan(context.Background(), 0, fmt.Sprintf("%s:*", prefix), 0).Iterator()
 	for iter.Next(context.Background()) {

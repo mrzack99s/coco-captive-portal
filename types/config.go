@@ -15,15 +15,21 @@ type ConfigType struct {
 	LDAP                 *authentication.LDAPEndpointType   `yaml:"ldap"`
 	HTML                 HTMLType                           `yaml:"html"`
 	Administrator        CredentialType                     `yaml:"administrator"`
+	DNSProxy             DNSProxyType                       `yaml:"dns_proxy"`
 	DomainNames          struct {
 		OperatorDomainName string `yaml:"operator_domain_name"`
 		AuthDomainName     string `yaml:"auth_domain_name"`
 	} `yaml:"domain_names"`
+	DDOSPrevention bool `yaml:"ddos_prevention"`
 }
 
 type EndpointType struct {
 	Hostname string `yaml:"hostname"`
 	Port     uint   `yaml:"port"`
+}
+
+type DNSProxyType struct {
+	Forward string `yaml:"forward"`
 }
 
 type CredentialType struct {

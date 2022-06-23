@@ -19,21 +19,21 @@ func NewSession(session *types.SessionType) (err error) {
 		return
 	}
 
-	err = utils.CacheSet(constants.SESSION, sessionUUID, *session)
+	err = utils.CacheSet(constants.SCHEMA_SESSION, sessionUUID, *session)
 	if err != nil {
 		return
 	}
 
-	err = utils.CacheSet(constants.MAP_IP_TO_SESSION, session.IPAddress, sessionUUID)
+	err = utils.CacheSet(constants.SCHEMA_MAP_IP_TO_SESSION, session.IPAddress, sessionUUID)
 	if err != nil {
 		return
 	}
 
 	missue2session := []string{}
-	utils.CacheGet(constants.MAP_ISSUE_TO_SESSION, session.Issue, &missue2session)
+	utils.CacheGet(constants.SCHEMA_MAP_ISSUE_TO_SESSION, session.Issue, &missue2session)
 	missue2session = append(missue2session, sessionUUID)
 
-	err = utils.CacheSet(constants.MAP_ISSUE_TO_SESSION, session.Issue, missue2session)
+	err = utils.CacheSet(constants.SCHEMA_MAP_ISSUE_TO_SESSION, session.Issue, missue2session)
 	if err != nil {
 		return
 	}

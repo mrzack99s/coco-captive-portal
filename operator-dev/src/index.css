@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+  padding: 0.75rem 0.5rem;
+  color: #fff;
+  border-radius: 2px;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}

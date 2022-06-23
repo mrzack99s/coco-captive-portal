@@ -39,14 +39,11 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     const toast = useRef({} as any)
     const [cookies, , removeCookies] = useCookies(["api-token"])
 
-    const checkCredential = () => {
+    const checkCredential = (path: string) => {
         apiInstance.api.admSigned()
             .then(() => {
-                if (cookies['api-token'] && cookies['api-token'] !== "null") {
-                    navigate("/monitor")
-                } else {
-                    removeCookies("api-token")
-                    navigate("/sign-in")
+                if (path == "/sign-in") {
+                    navigate("/overview")
                 }
             })
             .catch(() => {
@@ -56,7 +53,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     }
 
     useEffect(() => {
-        checkCredential()
+        checkCredential(location.pathname)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
@@ -83,7 +80,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
             }
 
 
-            {!location.pathname.includes("/monitor") &&
+            {location.pathname.includes("/sign-in") &&
                 <span className="p-buttonset" style={{
                     position: "absolute",
                     top: "30px",

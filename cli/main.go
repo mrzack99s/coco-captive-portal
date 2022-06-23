@@ -21,7 +21,6 @@ import (
 // @in header
 // @name api-token
 func main() {
-	var prodMode bool
 
 	netLogger := config.LoggingConfig{
 		ConsoleLoggingEnabled: true,
@@ -45,27 +44,18 @@ func main() {
 	}
 	config.AppLog = appLogger.Configure()
 
-	// Parse config
-	config.ParseConfig()
-
 	if !utils.IsRootPrivilege() {
 		panic(`this application needs the ability to run commands as root. We are unable to find either "sudo" or "su" available to make this happen.`)
 	}
 
 	// Setup Cache
-	utils.SetupCache()
-	utils.CacheDeleteWithPrefix(constants.MAP_IP_TO_SESSION)
-	utils.CacheDeleteWithPrefix(constants.SESSION)
-	utils.CacheDeleteWithPrefix(constants.SESSION_INITIALIZE)
-	utils.CacheDeleteWithPrefix(constants.MAP_ISSUE_TO_SESSION)
-	utils.CacheDeleteWithPrefix("temp")
 
 	var cmdRun = &cobra.Command{
 		Use:   "run",
 		Short: "To run an application. Default run in development mode",
 		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			runtime.AppRunner(prodMode)
+			runtime.AppRunner(config.PROD_MODE)
 		},
 	}
 
@@ -87,7 +77,7 @@ func main() {
 		},
 	}
 
-	cmdRun.Flags().BoolVarP(&prodMode, "production", "r", false, "Run in production mode")
+	cmdRun.Flags().BoolVarP(&config.PROD_MODE, "production", "r", false, "Run in production mode")
 
 	var rootCmd = &cobra.Command{Use: "coco"}
 	rootCmd.AddCommand(cmdRun)

@@ -28,7 +28,7 @@ func (ctl *authController) signout(c *gin.Context) {
 	clientIp := c.ClientIP()
 
 	// Get session by ip address
-	sessionId, err := utils.CacheGetString(constants.MAP_IP_TO_SESSION, clientIp)
+	sessionId, err := utils.CacheGetString(constants.SCHEMA_MAP_IP_TO_SESSION, clientIp)
 	if err != nil {
 		msg := fmt.Sprintf("not found session of %s", clientIp)
 		config.AppLog.Error().Msg(msg)
@@ -39,7 +39,7 @@ func (ctl *authController) signout(c *gin.Context) {
 	}
 
 	var ss types.SessionType
-	err = utils.CacheGet(constants.SESSION, sessionId, &ss)
+	err = utils.CacheGet(constants.SCHEMA_SESSION, sessionId, &ss)
 	if err != nil {
 		msg := fmt.Sprintf("session of id %s", sessionId)
 		config.AppLog.Error().Msg(msg)

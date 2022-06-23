@@ -21,7 +21,7 @@ func GenerateApiToken() (err error) {
 		APIToken: SecretGenerator(64),
 	}
 
-	err = CacheSet(constants.CONFIG, "api-token", appCredential.APIToken)
+	err = CacheSet(constants.SCHEMA_CONFIG, "api-token", appCredential.APIToken)
 	if err != nil {
 		return
 	}

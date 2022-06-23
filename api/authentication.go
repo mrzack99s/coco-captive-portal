@@ -41,7 +41,7 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 
 	// Get init session by secret
 	var initSession types.InitializedType
-	err := utils.CacheGet(constants.SESSION_INITIALIZE, checkCredential.Secret, &initSession)
+	err := utils.CacheGet(constants.SCHEMA_SESSION_INITIALIZE, checkCredential.Secret, &initSession)
 	if err != nil {
 		msg := fmt.Sprintf("wrong initial secret from %s", clientIp)
 		config.AppLog.Error().Msg(msg)
@@ -60,7 +60,7 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 	}
 
 	// Fine logged by ip
-	_, err = utils.CacheGetString(constants.MAP_IP_TO_SESSION, clientIp)
+	_, err = utils.CacheGetString(constants.SCHEMA_MAP_IP_TO_SESSION, clientIp)
 	if err == nil {
 		msg := fmt.Sprintf("%s signed", clientIp)
 		config.AppLog.Error().Msg(msg)
@@ -72,7 +72,7 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 
 	// Fine logged by username
 	var arrSid []string
-	utils.CacheGet(constants.MAP_ISSUE_TO_SESSION, checkCredential.Username, &arrSid)
+	utils.CacheGet(constants.SCHEMA_MAP_ISSUE_TO_SESSION, checkCredential.Username, &arrSid)
 
 	if len(arrSid) >= int(config.Config.MaxConcurrentSession) {
 		msg := fmt.Sprintf("user %s reached the limit concurrent session and sign-in via %s", checkCredential.Username, clientIp)
@@ -127,7 +127,7 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 		return
 	}
 
-	err = utils.CacheDelete(constants.SESSION_INITIALIZE, initSession.Secret)
+	err = utils.CacheDelete(constants.SCHEMA_SESSION_INITIALIZE, initSession.Secret)
 	if err != nil {
 		msg := fmt.Sprintf("%s via %s", err.Error(), clientIp)
 		config.AppLog.Error().Msg(msg)

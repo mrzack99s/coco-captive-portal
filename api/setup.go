@@ -35,7 +35,7 @@ func NewOperatorController(router gin.IRouter) *operatorController {
 func tokenMiddleware(c *gin.Context) {
 	tokenString := c.Request.Header.Get("api-token")
 
-	token, err := utils.CacheGetString(constants.CONFIG, "api-token")
+	token, err := utils.CacheGetString(constants.SCHEMA_CONFIG, "api-token")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "not found token in config, please renew an api token")
 		c.Abort()

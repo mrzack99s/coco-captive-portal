@@ -44,6 +44,7 @@ func main() {
 	}
 
 	cmdUp.Flags().BoolVar(&installer_utils.IGNORE_VERIFY, "ignore", false, "Ignore some resource verify")
+	cmdUp.Flags().BoolVar(&installer_utils.LATEST, "latest", false, "Install with a lastest version")
 
 	var rootCmd = &cobra.Command{Use: "coco-installer"}
 	rootCmd.AddCommand(cmdUp)

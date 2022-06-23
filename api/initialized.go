@@ -31,7 +31,7 @@ func (ctl *authController) getInitialize(c *gin.Context) {
 		Secret:    secret,
 	}
 
-	err := utils.CacheSetWithTimeDuration(constants.SESSION_INITIALIZE, secret, iniObj, time.Minute*2)
+	err := utils.CacheSetWithTimeDuration(constants.SCHEMA_SESSION_INITIALIZE, secret, iniObj, time.Minute*2)
 	if err != nil {
 		msg := fmt.Sprintf("%s via %s", err.Error(), c.ClientIP())
 		config.AppLog.Error().Msg(msg)
@@ -66,7 +66,7 @@ func (ctl *authController) isExistInitializeSecret(c *gin.Context) {
 
 	// Get init session by secret
 	var initSession types.InitializedType
-	err := utils.CacheGet(constants.SESSION_INITIALIZE, initialized.Secret, &initSession)
+	err := utils.CacheGet(constants.SCHEMA_SESSION_INITIALIZE, initialized.Secret, &initSession)
 	if err != nil {
 		msg := "not found initial secret"
 		c.JSON(http.StatusInternalServerError, gin.H{

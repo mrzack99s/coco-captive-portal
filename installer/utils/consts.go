@@ -2,6 +2,7 @@ package installer_utils
 
 const (
 	APP_NAME                = "CoCo Captive Portal"
+	APP_VERSION             = "v1.1.0"
 	COMMAND_INSTALL_TYPE    = "install"
 	COMMAND_IMPORT_KEY_TYPE = "import-key"
 	COMMAND_UPDATE_TYPE     = "update"

@@ -39,7 +39,7 @@ func (ctl *operatorController) kickSessionViaUsername(c *gin.Context) {
 
 	// Get session by ip address
 	var sessionIds []string
-	err := utils.CacheGet(constants.MAP_ISSUE_TO_SESSION, ss.Issue, &sessionIds)
+	err := utils.CacheGet(constants.SCHEMA_MAP_ISSUE_TO_SESSION, ss.Issue, &sessionIds)
 	if err != nil {
 		msg := fmt.Sprintf("kick: not found session of username %s", ss.Issue)
 		config.AppLog.Error().Msg(msg)
@@ -51,7 +51,7 @@ func (ctl *operatorController) kickSessionViaUsername(c *gin.Context) {
 
 	for _, s := range sessionIds {
 		var nSession types.SessionType
-		err = utils.CacheGet(constants.SESSION, s, &nSession)
+		err = utils.CacheGet(constants.SCHEMA_SESSION, s, &nSession)
 		if err != nil {
 			msg := fmt.Sprintf("kick: session of id %s", s)
 			config.AppLog.Error().Msg(msg)
@@ -101,7 +101,7 @@ func (ctl *operatorController) kickSessionViaIPAddress(c *gin.Context) {
 	}
 
 	// Get session by ip address
-	sessionId, err := utils.CacheGetString(constants.MAP_IP_TO_SESSION, ss.IPAddress)
+	sessionId, err := utils.CacheGetString(constants.SCHEMA_MAP_IP_TO_SESSION, ss.IPAddress)
 	if err != nil {
 		msg := fmt.Sprintf("kick: not found session of ip %s", ss.IPAddress)
 		config.AppLog.Error().Msg(msg)
@@ -111,7 +111,7 @@ func (ctl *operatorController) kickSessionViaIPAddress(c *gin.Context) {
 		return
 	}
 
-	err = utils.CacheGet(constants.SESSION, sessionId, &ss)
+	err = utils.CacheGet(constants.SCHEMA_SESSION, sessionId, &ss)
 	if err != nil {
 		msg := fmt.Sprintf("kick: session of id %s", sessionId)
 		config.AppLog.Error().Msg(msg)
@@ -149,7 +149,7 @@ func (ctl *operatorController) kickSessionViaIPAddress(c *gin.Context) {
 // @Router /api/get-all-session [get]
 func (ctl *operatorController) getAllSession(c *gin.Context) {
 	allSession := []types.SessionType{}
-	allKey, err := utils.CacheGetAllKey(constants.SESSION)
+	allKey, err := utils.CacheGetAllKey(constants.SCHEMA_SESSION)
 	if err != nil {
 		msg := fmt.Sprintf("get-all-session: %s", err.Error())
 		config.AppLog.Error().Msg(msg)

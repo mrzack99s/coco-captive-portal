@@ -65,9 +65,54 @@ func finally() (err error) {
 		}
 	}
 
+	disableIpv6 := ReplaceWordInFileType{
+		OldWord: "#net.ipv6.conf.all.disable_ipv6=1",
+		NewWord: "net.ipv6.conf.all.disable_ipv6=1",
+		File:    "/etc/sysctl.conf",
+	}
+	if e := Replace(disableIpv6); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msg("replace was failed")
+		} else {
+			log.Error().Msg("replace was failed")
+			err = e
+			return
+		}
+	}
+
+	disableIpv6 = ReplaceWordInFileType{
+		OldWord: "#net.ipv6.conf.default.disable_ipv6=1",
+		NewWord: "net.ipv6.conf.default.disable_ipv6=1",
+		File:    "/etc/sysctl.conf",
+	}
+	if e := Replace(disableIpv6); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msg("replace was failed")
+		} else {
+			log.Error().Msg("replace was failed")
+			err = e
+			return
+		}
+	}
+
+	disableIpv6 = ReplaceWordInFileType{
+		OldWord: "#net.ipv6.conf.all.disable_ipv6=1",
+		NewWord: "net.ipv6.conf.all.disable_ipv6=1",
+		File:    "/etc/sysctl.conf",
+	}
+	if e := Replace(disableIpv6); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msg("replace was failed")
+		} else {
+			log.Error().Msg("replace was failed")
+			err = e
+			return
+		}
+	}
+
 	cmd := CommandType{
 		Type:    COMMAND_EXEC_TYPE,
-		Name:    "commit enable net.ipv4.ip_forward",
+		Name:    "commit enable sysctl.conf",
 		Command: *exec.Command("sysctl", "-p"),
 	}
 	log.Info().Msg(getMessage(cmd, DOING_STATE))

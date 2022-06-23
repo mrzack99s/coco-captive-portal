@@ -66,10 +66,10 @@ function SignIn() {
                                 src={htmlProperties.logo_file_name ? require(`../assets/${htmlProperties.logo_file_name!}`) : require("../assets/logo.png")}
                                 style={{ maxWidth: '160px' }} />
                             <span className="block text-center text-6xl text-primary font-bold mb-1">
-                                {lang === "en" ? "Session Monitor" : "ตัวตรวจสอบเซสชัน"}
+                                {lang === "en" ? "CoCo Operator" : "โคโค่โอเปอเรเตอร์"}
                             </span>
                             <p className="mt-0 text-center mb-4 text-700 line-height-3">
-                                {lang === "en" ? "Monitor the signed session" : "ตรวจสอบเซสชันที่อยู่ในระบบ"}
+                                {lang === "en" ? "Configuration manager and session monitor" : "ตัวจัดการคอนฟิกและเซสชันมอนิเตอร์"}
                             </p>
                             <form onSubmit={goLogin}>
                                 <div className="p-inputgroup  m-2">

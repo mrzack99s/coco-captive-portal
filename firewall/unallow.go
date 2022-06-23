@@ -6,12 +6,12 @@ import (
 )
 
 func UnallowAccess(ss *types.SessionType) (err error) {
-	err = ipt.Delete("nat", "PREROUTING", "-s", ss.IPAddress, "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-j", "ACCEPT")
+	err = IPT.Delete("nat", "PREROUTING", "-s", ss.IPAddress, "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
-	err = ipt.Delete("filter", "FORWARD", "-s", ss.IPAddress, "-i", config.Config.SecureInterface, "-j", "ACCEPT")
+	err = IPT.Delete("filter", "FORWARD", "-s", ss.IPAddress, "-i", config.Config.SecureInterface, "-j", "ACCEPT")
 	if err != nil {
 		return
 	}

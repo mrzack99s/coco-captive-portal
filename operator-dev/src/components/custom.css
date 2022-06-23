@@ -1,0 +1,48 @@
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-text {
+  color: #fff;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-icon {
+  color: #fff;
+  margin-right: 0.5rem;
+}
+
+.p-submenu-icon {
+  color: #fff !important;
+}
+@media screen and (max-width: 960px) {
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    .p-menuitem-icon {
+    color: var(--blue-500) !important;
+  }
+
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    .p-menuitem-text {
+    color: var(--gray-500) !important;
+  }
+
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    > .p-submenu-icon {
+    color: var(--blue-500) !important;
+  }
+
+  .p-menubar .p-menubar-button {
+    color: white !important;
+  }
+}

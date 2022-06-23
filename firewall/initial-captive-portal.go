@@ -11,24 +11,29 @@ import (
 func InitializeCaptivePortal() (err error) {
 
 	// Flush chain
-	err = ipt.ClearAll()
+	err = IPT.ClearAll()
 	if err != nil {
 		return
 	}
-	err = ipt.ClearChain("nat", "PREROUTING")
+	err = IPT.ClearChain("nat", "PREROUTING")
 	if err != nil {
 		return
 	}
 
 	// Append Rules
-	err = ipt.AppendUnique("filter", "INPUT", "-i", config.Config.EgressInterface, "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT")
+	err = IPT.AppendUnique("filter", "INPUT", "-p", "icmp", "-j", "DROP")
+	if err != nil {
+		return
+	}
+
+	err = IPT.AppendUnique("filter", "INPUT", "-i", config.Config.EgressInterface, "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
 	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
 
-	err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "udp", "-i", config.Config.SecureInterface, "--dport", "53", "-j", "ACCEPT")
+	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "udp", "-i", config.Config.SecureInterface, "--dport", "53", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
@@ -37,23 +42,23 @@ func InitializeCaptivePortal() (err error) {
 		_, host, port, _ := utils.ParseURL(config.Config.ExternalPortalURL)
 		hostIp, _ := utils.ResolveIp(host)
 
-		err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", port, "-d", hostIp, "-j", "ACCEPT")
+		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", port, "-d", hostIp, "-j", "ACCEPT")
 		if err != nil {
 			return
 		}
 	} else {
-		err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-d", interfaceIp, "-j", "ACCEPT")
+		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-d", interfaceIp, "-j", "ACCEPT")
 		if err != nil {
 			return
 		}
 	}
 
-	err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8080", "-d", interfaceIp, "-j", "ACCEPT")
+	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8080", "-d", interfaceIp, "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8443", "-d", interfaceIp, "-j", "ACCEPT")
+	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8443", "-d", interfaceIp, "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
@@ -81,7 +86,7 @@ func allowEndpoints() (err error) {
 	for _, s := range config.Config.AllowEndpoints {
 		allIp, _ := utils.ResolveAllIp(s.Hostname)
 		for _, hostIp := range allIp {
-			err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", fmt.Sprintf("%d", s.Port), "-d", hostIp, "-j", "ACCEPT")
+			err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", fmt.Sprintf("%d", s.Port), "-d", hostIp, "-j", "ACCEPT")
 			if err != nil {
 				return
 			}
@@ -93,22 +98,22 @@ func allowEndpoints() (err error) {
 
 func initFinally() (err error) {
 	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
-	err = ipt.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-i", config.Config.SecureInterface, "-j", "DROP")
+	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-i", config.Config.SecureInterface, "-j", "DROP")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", interfaceIp, "-m", "tcp", "--dport", "443", "-j", "ACCEPT")
+	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", interfaceIp, "-m", "tcp", "--dport", "443", "-j", "ACCEPT")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", "1.1.1.1", "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
+	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", "1.1.1.1", "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", "1.1.1.1", "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
+	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-d", "1.1.1.1", "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
 	if err != nil {
 		return
 	}
@@ -116,7 +121,7 @@ func initFinally() (err error) {
 	for _, s := range config.Config.AllowEndpoints {
 		allIp, _ := utils.ResolveAllIp(s.Hostname)
 		for _, hostIp := range allIp {
-			err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", s.Port), "-j", "ACCEPT")
+			err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", s.Port), "-j", "ACCEPT")
 			if err != nil {
 				return
 			}
@@ -125,12 +130,12 @@ func initFinally() (err error) {
 
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
+	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")
 	if err != nil {
 		return
 	}
 
-	err = ipt.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
+	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-j", "DNAT", "--to-destination", interfaceIp+":8443")
 	if err != nil {
 		return
 	}

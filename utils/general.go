@@ -31,6 +31,21 @@ func ExistingKeyInMap(in interface{}, key string) bool {
 	return false
 }
 
+func ExistingInArray(in interface{}, f interface{}) bool {
+
+	v := reflect.ValueOf(in)
+	if v.Kind() == reflect.Slice {
+		vals := reflect.ValueOf(in)
+		for i := 0; i < vals.Len(); i++ {
+			vf := reflect.ValueOf(f)
+			if vals.Index(i).Interface() == vf.Interface() {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func Transcode(in, out interface{}) {
 	buf := new(bytes.Buffer)
 	json.NewEncoder(buf).Encode(in)
