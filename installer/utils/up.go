@@ -16,7 +16,7 @@ func UpInstaller() {
 	}
 
 	if err := defineConfig(); err != nil {
-		log.Error().Msg("define config failed")
+		log.Error().Msg("define configure failed")
 		os.Exit(0)
 	}
 
