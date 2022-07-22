@@ -15,18 +15,8 @@ func downloadPackages() (err error) {
 	dlLink := []string{
 		"https://github.com/mrzack99s/coco-captive-portal/releases/download/" + APP_VERSION + "/coco",
 		"https://github.com/mrzack99s/coco-captive-portal/releases/download/" + APP_VERSION + "/coco-captive-portal.service",
-		"https://github.com/mrzack99s/coco-captive-portal/releases/download/" + APP_VERSION + "/config.yaml.sample",
 		"https://github.com/mrzack99s/coco-captive-portal/releases/download/" + APP_VERSION + "/dist-auth-ui.tar.gz",
 		"https://github.com/mrzack99s/coco-captive-portal/releases/download/" + APP_VERSION + "/dist-operator-ui.tar.gz",
-	}
-	if LATEST {
-		dlLink = []string{
-			"https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/coco",
-			"https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/coco-captive-portal.service",
-			"https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/config.yaml.sample",
-			"https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/dist-auth-ui.tar.gz",
-			"https://github.com/mrzack99s/coco-captive-portal/releases/latest/download/dist-operator-ui.tar.gz",
-		}
 	}
 
 	packages = append(packages, DownloadType{
@@ -42,20 +32,14 @@ func downloadPackages() (err error) {
 	})
 
 	packages = append(packages, DownloadType{
-		Name:            "sample config",
-		URL:             dlLink[2],
-		DestinationFile: fmt.Sprintf("%s/config.yaml.sample", APP_DIR),
-	})
-
-	packages = append(packages, DownloadType{
 		Name:            "coco-dist-auth-ui",
-		URL:             dlLink[3],
+		URL:             dlLink[2],
 		DestinationFile: "/tmp/coco-dist-auth-ui.tar.gz",
 	})
 
 	packages = append(packages, DownloadType{
 		Name:            "coco-dist-operator-ui",
-		URL:             dlLink[4],
+		URL:             dlLink[3],
 		DestinationFile: "/tmp/coco-dist-operator-ui.tar.gz",
 	})
 

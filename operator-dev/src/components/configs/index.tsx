@@ -33,9 +33,10 @@ const Config = () => {
       d = YAML.parse(data)
     }
 
-    apiInstance.api.setConfig(d)
+    apiInstance.api.setConfigWithRestartSystem(d)
       .then(() => {
         toast.current.show({ severity: 'success', summary: 'Success', detail: `Updated`, life: 3000 });
+        toast.current.show({ severity: 'info', summary: 'Infomation', detail: `Restarting`, life: 3000 });
         setRefresh(!refresh)
       })
       .catch(() => {

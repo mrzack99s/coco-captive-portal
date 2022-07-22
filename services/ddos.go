@@ -63,12 +63,13 @@ func ddosPreventor(ctx context.Context) {
 }
 
 func ddosHandler(interfaceName, intIpv4 string) {
-	RATE_LIMIT := 1024 // Per second
+	RATE_LIMIT := 100000 // Per second
 	ignore_port := []string{
 		"22",
 	}
 
 	if !config.PROD_MODE {
+		ignore_port = append(ignore_port, "6379")
 		ignore_port = append(ignore_port, "6379")
 	}
 

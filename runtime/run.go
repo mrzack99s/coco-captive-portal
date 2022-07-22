@@ -70,9 +70,9 @@ func authRuntime(flag ...bool) {
 	router := gin.Default()
 
 	if config.Config.ExternalPortalURL == "" {
-		router.Use(static.Serve("/", static.LocalFile("dist-auth-ui", true)))
+		router.Use(static.Serve("/", static.LocalFile(constants.APP_DIR+"/dist-auth-ui", true)))
 		router.NoRoute(func(c *gin.Context) {
-			c.File("dist-auth-ui/index.html")
+			c.File(constants.APP_DIR + "/dist-auth-ui/index.html")
 		})
 	}
 
@@ -106,7 +106,7 @@ func authRuntime(flag ...bool) {
 		apiEndpoint := router.Group("/api")
 		api.NewAuthController(apiEndpoint)
 
-		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), "./certs/authfullchain.pem", "./certs/authprivkey.pem")
+		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), constants.APP_DIR+"/certs/authfullchain.pem", constants.APP_DIR+"/certs/authprivkey.pem")
 		if err != nil {
 			config.AppLog.Error().Msg(err.Error())
 			return
@@ -134,9 +134,9 @@ func operatorRuntime(flag ...bool) {
 	})
 
 	if config.Config.Administrator.Username != "" && config.Config.Administrator.Password != "" {
-		router.Use(static.Serve("/", static.LocalFile("dist-operator-ui", true)))
+		router.Use(static.Serve("/", static.LocalFile(constants.APP_DIR+"/dist-operator-ui", true)))
 		router.NoRoute(func(c *gin.Context) {
-			c.File("dist-operator-ui/index.html")
+			c.File(constants.APP_DIR + "/dist-operator-ui/index.html")
 		})
 
 	}
@@ -169,7 +169,7 @@ func operatorRuntime(flag ...bool) {
 		router.Use(cors.New(corsConfig))
 		apiEndpoint := router.Group("/api")
 		api.NewOperatorController(apiEndpoint)
-		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), "./certs/operatorfullchain.pem", "./certs/operatorprivkey.pem")
+		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), constants.APP_DIR+"/certs/operatorfullchain.pem", constants.APP_DIR+"/certs/operatorprivkey.pem")
 		if err != nil {
 			config.AppLog.Error().Msg(err.Error())
 			return

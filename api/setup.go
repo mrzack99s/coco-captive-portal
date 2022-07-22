@@ -63,6 +63,7 @@ func (ctl *operatorController) register() {
 	ctl.router.PUT("/kick-username", tokenMiddleware, ctl.kickSessionViaUsername)
 	ctl.router.PUT("/kick-ip-address", tokenMiddleware, ctl.kickSessionViaIPAddress)
 	ctl.router.PUT("/config", tokenMiddleware, ctl.setConfig)
+	ctl.router.PUT("/config-with-restart-system", tokenMiddleware, ctl.setConfigWithRestartSystem)
 	ctl.router.GET("/get-all-session", tokenMiddleware, ctl.getAllSession)
 	ctl.router.GET("/count-all-session", tokenMiddleware, ctl.countAllSession)
 	ctl.router.GET("/revoke-administrator", tokenMiddleware, ctl.revokeAdministrator)

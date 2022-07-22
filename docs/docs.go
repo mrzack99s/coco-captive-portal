@@ -241,6 +241,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/config-with-restart-system": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Set config with restart system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Operator"
+                ],
+                "summary": "Set config with restart system",
+                "operationId": "set-config-with-restart-system",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ConfigType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "updated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/api/count-all-session": {
             "get": {
                 "security": [

@@ -425,6 +425,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Set config with restart system
+     *
+     * @tags Operator
+     * @name SetConfigWithRestartSystem
+     * @summary Set config with restart system
+     * @request PUT:/api/config-with-restart-system
+     * @secure
+     */
+    setConfigWithRestartSystem: (params: TypesConfigType, requestParams: RequestParams = {}) =>
+      this.request<string, GinH>({
+        path: `/api/config-with-restart-system`,
+        method: "PUT",
+        body: params,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...requestParams,
+      }),
+
+    /**
      * @description Count all session
      *
      * @tags Operator

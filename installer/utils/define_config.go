@@ -28,7 +28,77 @@ func defineConfig() (err error) {
 	config.SecureInterface = scan("Secure interface name (LAN): ")
 	config.SessionIdle = scanUint64("Session idle (Minutes): ")
 	config.MaxConcurrentSession = scanUint64("Max concurrent session (Devices): ")
-	config.RedirectURL = scan("After authorized then redirect to url: ")
+	authCertFileName := scan("Captive portal certificate file location: ")
+	authKeyFileName := scan("Captive portal key of certificate file location: ")
+	operatorCertFileName := scan("Operator certificate file location: ")
+	operatorKeyFileName := scan("Operator key of certificate file location: ")
+
+	dstAuthCertFileName := constants.APP_DIR + "/certs/authfullchain.pem"
+	dstAuthKeyFileName := constants.APP_DIR + "/certs/authprivkey.pem"
+	dstOperatorCertFileName := constants.APP_DIR + "/certs/operatorfullchain.pem"
+	dstOperatorKeyFileName := constants.APP_DIR + "/certs/operatorprivkey.pem"
+
+	log.Info().Msg("coping certificate file")
+	if e := copy(CopyType{
+		Src:  authCertFileName,
+		Dst:  dstAuthCertFileName,
+		Perm: 0644,
+	}); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msgf("copy %s to %s failed", authCertFileName, dstAuthCertFileName)
+		} else {
+			log.Warn().Msgf("copy %s to %s failed", authCertFileName, dstAuthCertFileName)
+			err = e
+			return
+		}
+	}
+
+	if e := copy(CopyType{
+		Src:  authKeyFileName,
+		Dst:  dstAuthKeyFileName,
+		Perm: 0644,
+	}); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msgf("copy %s to %s failed", authKeyFileName, dstAuthKeyFileName)
+		} else {
+			log.Warn().Msgf("copy %s to %s failed", authKeyFileName, dstAuthKeyFileName)
+			err = e
+			return
+		}
+	}
+
+	if e := copy(CopyType{
+		Src:  operatorCertFileName,
+		Dst:  dstOperatorCertFileName,
+		Perm: 0644,
+	}); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msgf("copy %s to %s failed", operatorCertFileName, dstOperatorCertFileName)
+		} else {
+			log.Warn().Msgf("copy %s to %s failed", operatorCertFileName, dstOperatorCertFileName)
+			err = e
+			return
+		}
+	}
+
+	if e := copy(CopyType{
+		Src:  operatorKeyFileName,
+		Dst:  dstOperatorKeyFileName,
+		Perm: 0644,
+	}); e != nil {
+		if IGNORE_VERIFY {
+			log.Warn().Msgf("copy %s to %s failed", operatorKeyFileName, dstOperatorKeyFileName)
+		} else {
+			log.Warn().Msgf("copy %s to %s failed", operatorKeyFileName, dstOperatorKeyFileName)
+			err = e
+			return
+		}
+	}
+
+	if confirmWithMsg("Are you need to custom domain of captive portal and operator?") {
+		config.DomainNames.AuthDomainName = scan("Captive portal domain name: ")
+		config.DomainNames.OperatorDomainName = scan("Operator domain name: ")
+	}
 
 	mode := ""
 	for !(mode == "ldap" || mode == "radius") {
@@ -40,10 +110,50 @@ func defineConfig() (err error) {
 		config.LDAP.Hostname = scan("[LDAP] Hostname: ")
 		config.LDAP.Port = scanUint64("[LDAP] Port: ")
 		config.LDAP.TLSEnable = confirmWithMsg("Enable TLS?")
+		if config.LDAP.TLSEnable {
+			certFileName := scan("Certificate file location: ")
+			keyFileName := scan("Key of certificate file location: ")
+
+			dstCertFileName := constants.APP_DIR + "/certs/ldapchain.pem"
+			dstKeyFileName := constants.APP_DIR + "/certs/ldapprivkey.pem"
+
+			log.Info().Msg("coping certificate file")
+			if e := copy(CopyType{
+				Src:  certFileName,
+				Dst:  dstCertFileName,
+				Perm: 0644,
+			}); e != nil {
+				if IGNORE_VERIFY {
+					log.Warn().Msgf("copy %s to %s failed", certFileName, dstCertFileName)
+				} else {
+					log.Warn().Msgf("copy %s to %s failed", certFileName, dstCertFileName)
+					err = e
+					return
+				}
+			}
+
+			if e := copy(CopyType{
+				Src:  keyFileName,
+				Dst:  dstKeyFileName,
+				Perm: 0644,
+			}); e != nil {
+				if IGNORE_VERIFY {
+					log.Warn().Msgf("copy %s to %s failed", keyFileName, dstKeyFileName)
+				} else {
+					log.Warn().Msgf("copy %s to %s failed", keyFileName, dstKeyFileName)
+					err = e
+					return
+				}
+			}
+
+		}
+
 		config.LDAP.SingleDomain = confirmWithMsg("Single domain?")
-		fmt.Println(config.LDAP.SingleDomain)
 		if !config.LDAP.SingleDomain {
 			config.LDAP.DomainNames = scanArray("Enter a domain name: ")
+		} else {
+			domain := scan("Enter a domain name: ")
+			config.LDAP.DomainNames = append(config.LDAP.DomainNames, domain)
 		}
 	} else if mode == "radius" {
 		config.Radius = &authentication.RadiusEndpointType{}

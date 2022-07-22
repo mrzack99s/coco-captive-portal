@@ -6,11 +6,12 @@ import (
 	"strings"
 
 	"github.com/go-ldap/ldap/v3"
+	"github.com/mrzack99s/coco-captive-portal/constants"
 )
 
 func (l *LDAPEndpointType) Connect() (err error) {
 	if l.TLSEnable {
-		cer, e := tls.LoadX509KeyPair("./certs/ldapchain.pem", "./certs/ldapprivkey.pem")
+		cer, e := tls.LoadX509KeyPair(constants.APP_DIR+"/certs/ldapchain.pem", constants.APP_DIR+"/certs/ldapprivkey.pem")
 		if e != nil {
 			err = e
 			return

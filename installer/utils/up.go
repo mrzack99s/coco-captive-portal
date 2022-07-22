@@ -1,6 +1,7 @@
 package installer_utils
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/rs/zerolog/log"
@@ -19,6 +20,8 @@ func UpInstaller() {
 		log.Error().Msg("define configure failed")
 		os.Exit(0)
 	}
+
+	fmt.Print("\n### Installation\n\n")
 
 	if err := installPackages(); err != nil {
 		log.Error().Msg("package install failed")

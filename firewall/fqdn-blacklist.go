@@ -12,3 +12,14 @@ func AddFQDNBlacklist(pattern string) (err error) {
 
 	return
 }
+
+func DelFQDNBlacklist(pattern string) (err error) {
+	err = IPT.Delete("filter", "FORWARD", "-i", config.Config.SecureInterface,
+		"-m", "string", "--string", pattern, "--algo", "kmp", "-j", "DROP")
+	if err != nil {
+		return
+	}
+	last_fqdn_blacklist_rule_num--
+
+	return
+}

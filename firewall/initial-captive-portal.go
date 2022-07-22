@@ -9,7 +9,7 @@ import (
 )
 
 func InitializeCaptivePortal() (err error) {
-
+	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
 	// Flush chain
 	err = IPT.ClearAll()
 	if err != nil {
@@ -26,12 +26,15 @@ func InitializeCaptivePortal() (err error) {
 		return
 	}
 
-	err = IPT.AppendUnique("filter", "INPUT", "-i", config.Config.EgressInterface, "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT")
+	err = IPT.AppendUnique("filter", "INPUT", "-p", "tcp", "--dport", "22", "-d", interfaceIp, "-j", "DROP")
 	if err != nil {
 		return
 	}
 
-	interfaceIp, _ := utils.GetSecureInterfaceIpv4Addr()
+	err = IPT.AppendUnique("filter", "INPUT", "-i", config.Config.EgressInterface, "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT")
+	if err != nil {
+		return
+	}
 
 	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "udp", "-i", config.Config.SecureInterface, "--dport", "53", "-j", "ACCEPT")
 	if err != nil {
@@ -54,9 +57,9 @@ func InitializeCaptivePortal() (err error) {
 	}
 
 	initFQDNBlocklist()
-	allowEndpoints()
-	bypassNetworks()
 	initFinally()
+
+	bypassNetworks()
 
 	return
 }
@@ -73,26 +76,12 @@ func initFQDNBlocklist() (err error) {
 
 func bypassNetworks() (err error) {
 	for _, snet := range config.Config.BypassNetworks {
-		err = AllowAccess(&types.SessionType{
+		err = AllowAccessBypass(&types.SessionType{
 			IPAddress: snet,
 		})
 		if err != nil {
 			return
 		}
-	}
-	return
-}
-
-func allowEndpoints() (err error) {
-	for _, s := range config.Config.AllowEndpoints {
-		allIp, _ := utils.ResolveAllIp(s.Hostname)
-		for _, hostIp := range allIp {
-			err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", fmt.Sprintf("%d", s.Port), "-d", hostIp, "-j", "ACCEPT")
-			if err != nil {
-				return
-			}
-		}
-
 	}
 	return
 }
