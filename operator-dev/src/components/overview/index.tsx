@@ -2,15 +2,10 @@ import { useEffect, useState } from 'react';
 import { useAdminApiConnector } from '../../utils/api-connector';
 import { useNavigate } from 'react-router';
 import { useToast } from '../../utils/properties';
-import { TypesConfigType, TypesExtendConfigType, TypesSessionType } from '../../api';
-import { Copyright } from '../copyright';
-import VirtualEditor from '../veditor';
-import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
+import { TypesExtendConfigType } from '../../api';
 import { Chip } from 'primereact/chip';
 import { Divider } from 'primereact/divider';
-import YAML from 'yaml'
 import { useClipboard } from '../../utils/clipboard';
-import { Button } from 'primereact/button';
 
 const Overview = () => {
     /* eslint-disable */

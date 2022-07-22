@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import { useAdminApiConnector } from '../../utils/api-connector';
 import { useNavigate } from 'react-router';
 import { useToast } from '../../utils/properties';
-import { Menubar } from 'primereact/menubar';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { confirmDialog } from 'primereact/confirmdialog';
 import { TypesSessionType } from '../../api';
 import { useCookies } from 'react-cookie';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
-import { Copyright } from '../copyright';
 
 const Monitor = () => {
     /* eslint-disable */
@@ -148,7 +146,6 @@ const Monitor = () => {
                     />
                 </DataTable>
             </div>
-            <Copyright />
         </div>
 
 

@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, Fragment, useState } from "react";
+import React, { CSSProperties, FC, Fragment } from "react";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/oceanicNext";
 import Editor from 'react-simple-code-editor'

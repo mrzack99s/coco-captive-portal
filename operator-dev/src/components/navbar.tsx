@@ -37,8 +37,8 @@ const items = [
     },
 ];
 
-export default () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['role', 'api-token']);
+const Navbar = () => {
+    const [, , removeCookie] = useCookies(['role', 'api-token']);
     const navigate = useNavigate()
     const apiInstance = useAdminApiConnector()
     const toast = useToast();
@@ -103,3 +103,5 @@ export default () => {
         </>
     );
 };
+
+export default Navbar;

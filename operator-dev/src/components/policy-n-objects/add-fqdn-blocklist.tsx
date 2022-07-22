@@ -23,7 +23,6 @@ export const AddFQDNBlocklist: FC<props> = ({ visible, setVisible, refresh }) =>
     const apiInstance = useAdminApiConnector();
     const {
         control,
-        formState: { errors, },
         handleSubmit,
         reset,
     } = useForm({ defaultValues });

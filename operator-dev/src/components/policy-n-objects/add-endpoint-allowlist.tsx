@@ -2,9 +2,8 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { InputNumber } from 'primereact/inputnumber';
 import { useAdminApiConnector } from "../../utils/api-connector";
 import { useToast } from "../../utils/properties";
 interface props {
@@ -23,7 +22,6 @@ export const AddEndpointAllowlist: FC<props> = ({ visible, setVisible, refresh }
     const apiInstance = useAdminApiConnector();
     const {
         control,
-        formState: { errors, },
         handleSubmit,
         reset,
     } = useForm({ defaultValues });

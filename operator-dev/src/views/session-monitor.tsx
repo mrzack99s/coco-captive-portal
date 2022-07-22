@@ -1,16 +1,10 @@
 import Navbar from "../components/navbar";
-import { useCookies } from 'react-cookie';
 import Monitor from '../components/monitor'
-import { useEffect } from "react";
-import { useAdminApiConnector } from "../utils/api-connector";
-import Overview from "../components/overview";
-export default () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['role']);
-
-    const apiConnector = useAdminApiConnector()
+import { Copyright } from "../components/copyright"
+const SessionMonitorView = () => {
 
     return (
-        <div>
+        <div className="mb-5">
             <Navbar />
             <div className="grid grid-nogutter m-0" style={{ position: "relative", top: "65px" }}>
                 <div className="col hidden lg:inline grid-nogutter"></div>
@@ -19,6 +13,9 @@ export default () => {
                 </div>
                 <div className="col hidden lg:inline grid-nogutter"></div>
             </div>
+            <Copyright />
         </div>
     );
 };
+
+export default SessionMonitorView;

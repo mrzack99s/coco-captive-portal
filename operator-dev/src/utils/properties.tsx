@@ -1,12 +1,11 @@
 import { useContext, createContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAdminApiConnector, useApiConnector } from "./api-connector";
+import { useAdminApiConnector } from "./api-connector";
 import { Toast } from "primereact/toast";
 import { TypesHTMLType } from "../api";
 import { Button } from 'primereact/button';
 import { useCookies } from "react-cookie";
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Tooltip } from 'primereact/tooltip';
 import { ConfirmDialog } from "primereact/confirmdialog";
 
 type ContextProps = {
@@ -39,12 +38,12 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     const [pageWaiting, setPageWaiting] = useState(false)
     const apiInstance = useAdminApiConnector();
     const toast = useRef({} as any)
-    const [cookies, , removeCookies] = useCookies(["api-token"])
+    const [, , removeCookies] = useCookies(["api-token"])
 
     const checkCredential = (path: string) => {
         apiInstance.api.admSigned()
             .then(() => {
-                if (path == "/sign-in") {
+                if (path === "/sign-in") {
                     navigate("/overview")
                 }
             })

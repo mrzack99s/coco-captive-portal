@@ -1,5 +1,4 @@
 import Navbar from "../components/navbar";
-import { useCookies } from 'react-cookie';
 import { useEffect, useState } from "react";
 import { useAdminApiConnector } from "../utils/api-connector";
 import { VirtualScroller } from "primereact/virtualscroller";
@@ -15,8 +14,9 @@ import { AddEndpointAllowlist } from "../components/policy-n-objects/add-endpoin
 import { AddBypassNetwork } from "../components/policy-n-objects/add-bypass-network";
 import { useToast } from "../utils/properties";
 import { confirmDialog } from "primereact/confirmdialog";
+import { Copyright } from "../components/copyright"
 
-export default () => {
+const PolicyNObjectView = () => {
     const [config, setConfig] = useState({} as TypesConfigType)
     const apiInstance = useAdminApiConnector()
     const [refresh, setRefresh] = useState(false)
@@ -36,6 +36,7 @@ export default () => {
 
     useEffect(() => {
         getData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getData = () => {
@@ -53,19 +54,21 @@ export default () => {
 
     useEffect(() => {
         getData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh])
 
     const filter = (kw: string, list: any, setFunc: React.SetStateAction<any>) => {
-        if (kw != "") {
+        if (kw !== "") {
             const objKeys = Object.keys(list)
+            // eslint-disable-next-line array-callback-return
             const filtered = list.filter((e: any) => {
-                if (typeof e == "string") {
+                if (typeof e === "string") {
                     return e.includes(kw)
                 } else {
                     objKeys.forEach(key => {
-                        if (typeof e[key] == "string") {
+                        if (typeof e[key] === "string") {
                             e[key].includes(kw)
-                        } else if (typeof e[key] == "number") {
+                        } else if (typeof e[key] === "number") {
                             e[key].toString().includes(kw)
                         }
                     })
@@ -80,15 +83,15 @@ export default () => {
         let index = -1;
         switch (deleteMode) {
             case CONSTANT_FQDN_BLOCKLIST:
-                index = temp.fqdn_blocklist!.findIndex(e => e == deleteSelected)
+                index = temp.fqdn_blocklist!.findIndex(e => e === deleteSelected)
                 temp.fqdn_blocklist!.splice(index, 1)
                 break;
             case CONSTANT_ENDPOINT_ALLOWLIST:
-                index = temp.allow_endpoints!.findIndex(e => e == deleteSelected)
+                index = temp.allow_endpoints!.findIndex(e => e === deleteSelected)
                 temp.allow_endpoints!.splice(index, 1)
                 break;
             case CONSTANT_BYPASS_NETWORK:
-                index = temp.bypass_networks!.findIndex(e => e == deleteSelected)
+                index = temp.bypass_networks!.findIndex(e => e === deleteSelected)
                 temp.bypass_networks!.splice(index, 1)
                 break;
         }
@@ -109,21 +112,24 @@ export default () => {
     }
 
     useEffect(() => {
-        if (filterEndpointAllowList != "") {
+        if (filterEndpointAllowList !== "") {
             filter(filterEndpointAllowList, config.allow_endpoints, setEndpointAllowList)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterEndpointAllowList])
 
     useEffect(() => {
-        if (filterFQDNBlockList != "") {
+        if (filterFQDNBlockList !== "") {
             filter(filterFQDNBlockList, config.fqdn_blocklist, setFQDNBlockList)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterFQDNBlockList])
 
     useEffect(() => {
-        if (filterBypassNetwork != "") {
+        if (filterBypassNetwork !== "") {
             filter(filterBypassNetwork, config.bypass_networks, setBypassNetwork)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterBypassNetwork])
 
     useEffect(() => {
@@ -167,6 +173,7 @@ export default () => {
                     break;
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [deleteSelected, deleteMode])
 
 
@@ -190,7 +197,7 @@ export default () => {
     }
 
     return (
-        <div>
+        <div className="mb-5">
             <Navbar />
             <AddFQDNBlocklist refresh={() => {
                 setRefresh(!refresh)
@@ -272,7 +279,7 @@ export default () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {bypassNetwork.length == 0 &&
+                                    {bypassNetwork.length === 0 &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found network
                                         </div>
@@ -356,7 +363,7 @@ export default () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {endpointAllowList.length == 0 &&
+                                    {endpointAllowList.length === 0 &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>
@@ -419,7 +426,7 @@ export default () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {fqdnBlockList.length == 0 &&
+                                    {fqdnBlockList.length === 0 &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>
@@ -433,6 +440,9 @@ export default () => {
                 </div>
                 <div className="col hidden lg:inline grid-nogutter"></div>
             </div>
+            <Copyright />
         </div>
     );
 };
+
+export default PolicyNObjectView;

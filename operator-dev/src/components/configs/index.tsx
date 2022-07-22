@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAdminApiConnector } from '../../utils/api-connector';
 import { useNavigate } from 'react-router';
 import { useToast } from '../../utils/properties';
-import { TypesConfigType, TypesSessionType } from '../../api';
-import { Copyright } from '../copyright';
 import VirtualEditor from '../veditor';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Dropdown } from 'primereact/dropdown';
