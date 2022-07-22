@@ -37,7 +37,6 @@ func AppRunner(flag ...bool) {
 
 	if flag[0] {
 		gin.SetMode(gin.ReleaseMode)
-
 	}
 	err := firewall.InitializeCaptivePortal()
 	if err != nil {

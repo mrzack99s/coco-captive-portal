@@ -46,7 +46,12 @@ func AllowAccessBypass(ss *types.SessionType) (err error) {
 func AddAllowEndpoint(ss *types.EndpointType) (err error) {
 	allIp, _ := utils.ResolveAllIp(ss.Hostname)
 	for _, hostIp := range allIp {
-		err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", ss.Port), "-j", "ACCEPT")
+		err = IPT.Insert("filter", "FORWARD", last_allow_endpoint_rule_num, "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", ss.Port), "-j", "ACCEPT")
+		if err != nil {
+			return
+		}
+
+		err = IPT.Insert("nat", "PREROUTING", last_allow_endpoint_rule_num+1, "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", ss.Port), "-j", "ACCEPT")
 		if err != nil {
 			return
 		}

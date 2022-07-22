@@ -26,9 +26,11 @@ func InitializeCaptivePortal() (err error) {
 		return
 	}
 
-	err = IPT.AppendUnique("filter", "INPUT", "-p", "tcp", "--dport", "22", "-d", interfaceIp, "-j", "DROP")
-	if err != nil {
-		return
+	if config.PROD_MODE {
+		err = IPT.AppendUnique("filter", "INPUT", "-p", "tcp", "--dport", "22", "-d", interfaceIp, "-j", "DROP")
+		if err != nil {
+			return
+		}
 	}
 
 	err = IPT.AppendUnique("filter", "INPUT", "-i", config.Config.EgressInterface, "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT")
@@ -109,15 +111,7 @@ func initFinally() (err error) {
 	}
 
 	for _, s := range config.Config.AllowEndpoints {
-		allIp, _ := utils.ResolveAllIp(s.Hostname)
-		for _, hostIp := range allIp {
-			err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "-m", "tcp", "-d", hostIp, "--dport", fmt.Sprintf("%d", s.Port), "-j", "ACCEPT")
-			if err != nil {
-				return
-			}
-			last_allow_endpoint_rule_num++
-		}
-
+		AddAllowEndpoint(&s)
 	}
 
 	err = IPT.AppendUnique("nat", "PREROUTING", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "80", "-j", "DNAT", "--to-destination", interfaceIp+":8080")

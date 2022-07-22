@@ -115,8 +115,11 @@ func CaptivePortalDetector(ctx context.Context, flag ...bool) {
 
 				err := router.RunTLS(fmt.Sprintf("%s:8443", intIp), constants.APP_DIR+"/certs/authfullchain.pem", constants.APP_DIR+"/certs/authprivkey.pem")
 				if err != nil {
-					config.AppLog.Error().Msg("captive-portal-detect-https: " + err.Error())
-					return
+					err := router.RunTLS(fmt.Sprintf("%s:8443", intIp), "./certs/authfullchain.pem", "./certs/authprivkey.pem")
+					if err != nil {
+						config.AppLog.Error().Msg("captive-portal-detect-https: " + err.Error())
+						return
+					}
 				}
 			}
 		}

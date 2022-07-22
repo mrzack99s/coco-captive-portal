@@ -59,21 +59,32 @@ const PolicyNObjectView = () => {
 
     const filter = (kw: string, list: any, setFunc: React.SetStateAction<any>) => {
         if (kw !== "") {
-            const objKeys = Object.keys(list)
+
             // eslint-disable-next-line array-callback-return
             const filtered = list.filter((e: any) => {
                 if (typeof e === "string") {
                     return e.includes(kw)
                 } else {
-                    objKeys.forEach(key => {
-                        if (typeof e[key] === "string") {
-                            e[key].includes(kw)
-                        } else if (typeof e[key] === "number") {
-                            e[key].toString().includes(kw)
+                    const objKeys = Object.keys(e)
+                    let found = false
+                    for (let i = 0; i < objKeys.length; i++) {
+                        if (typeof e[objKeys[i]] === "string") {
+                            if (e[objKeys[i]].includes(kw)) {
+                                found = true
+                                break
+                            }
                         }
-                    })
+                        if (typeof e[objKeys[i]] === "number") {
+                            if (e[objKeys[i]].toString().includes(kw)) {
+                                found = true
+                                break
+                            }
+                        }
+                    }
+                    return found
                 }
             })
+            console.log(filtered)
             setFunc(filtered!)
         }
     }
@@ -242,7 +253,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {bypassNetwork.length > 0 &&
+                                    {bypassNetwork &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -279,7 +290,7 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {bypassNetwork.length === 0 &&
+                                    {!bypassNetwork &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found network
                                         </div>
@@ -319,7 +330,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {endpointAllowList.length > 0 &&
+                                    {endpointAllowList &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -363,7 +374,7 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {endpointAllowList.length === 0 &&
+                                    {!endpointAllowList &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>
@@ -389,7 +400,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {fqdnBlockList.length > 0 &&
+                                    {fqdnBlockList &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -426,7 +437,7 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {fqdnBlockList.length === 0 &&
+                                    {!fqdnBlockList &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>

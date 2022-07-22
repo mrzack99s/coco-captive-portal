@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/google/gopacket"
@@ -63,13 +64,11 @@ func ddosPreventor(ctx context.Context) {
 }
 
 func ddosHandler(interfaceName, intIpv4 string) {
-	RATE_LIMIT := 100000 // Per second
-	ignore_port := []string{
-		"22",
-	}
+	RATE_LIMIT := 1000000 // Per second
+	ignore_port := []string{}
 
 	if !config.PROD_MODE {
-		ignore_port = append(ignore_port, "6379")
+		ignore_port = append(ignore_port, "22")
 		ignore_port = append(ignore_port, "6379")
 	}
 
@@ -108,6 +107,7 @@ func ddosHandler(interfaceName, intIpv4 string) {
 				regex := regexp.MustCompile("[a-zA-Z()]+")
 				dportSplit := regex.Split(dport, -1)
 				dPortOnlyNum = dportSplit[0]
+				dPortOnlyNum = strings.TrimSpace(dPortOnlyNum)
 			}
 
 			if !utils.ExistingInArray(ignore_port, dPortOnlyNum) {

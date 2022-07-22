@@ -11,11 +11,15 @@ import (
 
 func (l *LDAPEndpointType) Connect() (err error) {
 	if l.TLSEnable {
-		cer, e := tls.LoadX509KeyPair(constants.APP_DIR+"/certs/ldapchain.pem", constants.APP_DIR+"/certs/ldapprivkey.pem")
+		cer, e := tls.LoadX509KeyPair("./certs/ldapchain.pem", "./certs/ldapprivkey.pem")
 		if e != nil {
-			err = e
-			return
+			cer, e = tls.LoadX509KeyPair(constants.APP_DIR+"/certs/ldapchain.pem", constants.APP_DIR+"/certs/ldapprivkey.pem")
+			if e != nil {
+				err = e
+				return
+			}
 		}
+
 		config := &tls.Config{Certificates: []tls.Certificate{cer}}
 
 		l.instance, err = ldap.DialTLS("tcp", fmt.Sprintf("%s:%d", l.Hostname, l.Port), config)
