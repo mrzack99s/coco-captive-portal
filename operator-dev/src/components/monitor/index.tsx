@@ -13,7 +13,7 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Copyright } from '../copyright';
 
-function Monitor() {
+const Monitor = () => {
     /* eslint-disable */
     const [data, setData] = useState([] as TypesSessionType[])
     const [refresh, setRefresh] = useState(false)
@@ -24,16 +24,6 @@ function Monitor() {
     const toast = useToast();
     const [kickSelected, setKickSelected] = useState({} as TypesSessionType)
     const [cookies, setcookies, removeCookies] = useCookies(["api-token"]);
-
-    const end = () => (
-        <>
-            <Button label="Sign-Out" onClick={() => { revokeAdmin() }} className="p-button-danger" />
-        </>
-    );
-
-    const start = () => (
-        <div><Button label="COCO" style={{ height: "60px" }} onClick={() => navigate("/")} className="p-button-text text-white text-2xl p-0 bg-blue-500 mr-4" /></div>
-    );
 
     const accept = () => {
         apiInstance.api.kickViaIpAddress(kickSelected)
@@ -55,7 +45,6 @@ function Monitor() {
     };
 
     useEffect(() => {
-
         if (kickSelected.session_uuid) {
             confirmDialog({
                 message: 'Do you want to kick this session?',
@@ -67,13 +56,6 @@ function Monitor() {
             });
         }
     }, [kickSelected])
-
-    const revokeAdmin = () => {
-        apiInstance.api.revokeAdministrator()
-        removeCookies("api-token")
-        toast.current.show({ severity: 'success', summary: 'Success', detail: `Sigend out`, life: 3000 });
-        navigate("/operator/sign-in")
-    }
 
     const getData = () => {
         setLading(true)
@@ -138,7 +120,6 @@ function Monitor() {
 
     return (
         <div>
-            <ConfirmDialog />
             <div>
                 <div className='w-full p-3 bg-gray-50 text-xl font-bold'>
                     Session Monitor

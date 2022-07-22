@@ -37,6 +37,12 @@ func (c *LoggingConfig) Configure() *zerolog.Logger {
 	return &logger
 }
 
+func (c *LoggingConfig) ConfigureWithoutDisplay() *zerolog.Logger {
+	logger := zerolog.New(c.newRollingFile()).With().Timestamp().Logger()
+
+	return &logger
+}
+
 func (c *LoggingConfig) newRollingFile() io.Writer {
 	if err := os.MkdirAll(c.Directory, 0600); err != nil {
 		log.Error().Err(err).Str("path", c.Directory).Msg("can't create log directory")

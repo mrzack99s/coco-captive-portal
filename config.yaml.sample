@@ -4,17 +4,19 @@ session_idle: 30 # Minutes
 max_concurrent_session: 5 # to limit a concurrent session
 external_portal_url: # Optional
 redirect_url: # Optional
+ddos_prevention: true
+# fqdn_blocklist: # Optional
+#    - test.com 
 ldap: # Use ldap authentication
-  product: google # google | common
   tls_enable: true
   hostname:
   port: 636
-  bind_username: # Optional
-  bind_password: # Optional
-  allow_base_dn: # Optional. Is string array
+  single_domain: false
+  domain_names:
+    - "coco-captive-portal.local"
 radius: # Use radius authentication
   hostname:
-  port: 636
+  port: 1812
   secret:
 html: # To config html
   default_language: "en" # en | th
@@ -29,9 +31,9 @@ bypass_networks: # To bypass network cidr with pattern [network]/[prefix]
 allow_endpoints: # To allow access to endpoint without captive portal
   - hostname:
     port:
-administrator: # To set admin monitoring credential
+administrator: # To set admin credential
   username: admin
-  password: P@ssw0rd
+  password: P@ssw0rd # in sha512
 domain_names: # To provide a domain name
   operator_domain_name:  # To provide a domain name for operator
   auth_domain_name: # To provide a domain name for user access to authentication

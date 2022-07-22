@@ -1,5 +1,29 @@
 basePath: /api
 definitions:
+  authentication.LDAPEndpointType:
+    properties:
+      domain_names:
+        items:
+          type: string
+        type: array
+      hostname:
+        type: string
+      port:
+        type: integer
+      single_domain:
+        type: boolean
+      tls_enable:
+        type: boolean
+    type: object
+  authentication.RadiusEndpointType:
+    properties:
+      hostname:
+        type: string
+      port:
+        type: integer
+      secret:
+        type: string
+    type: object
   gin.H:
     additionalProperties:
       type: any
@@ -13,6 +37,19 @@ definitions:
       status:
         type: string
     type: object
+  types.CaptivePortalConfigFundamentalType:
+    properties:
+      domain_names:
+        items:
+          type: string
+        type: array
+      html:
+        $ref: '#/definitions/types.HTMLType'
+      mode:
+        type: string
+      single_domain:
+        type: boolean
+    type: object
   types.CheckCredentialType:
     properties:
       password:
@@ -22,12 +59,114 @@ definitions:
       username:
         type: string
     type: object
+  types.ConfigType:
+    properties:
+      administrator:
+        $ref: '#/definitions/types.CredentialType'
+      allow_endpoints:
+        items:
+          $ref: '#/definitions/types.EndpointType'
+        type: array
+      bypass_networks:
+        items:
+          type: string
+        type: array
+      ddos_prevention:
+        type: boolean
+      domain_names:
+        properties:
+          auth_domain_name:
+            type: string
+          operator_domain_name:
+            type: string
+        type: object
+      egress_interface:
+        type: string
+      external_portal_url:
+        type: string
+      fqdn_blocklist:
+        items:
+          type: string
+        type: array
+      html:
+        $ref: '#/definitions/types.HTMLType'
+      ldap:
+        $ref: '#/definitions/authentication.LDAPEndpointType'
+      max_concurrent_session:
+        type: integer
+      radius:
+        $ref: '#/definitions/authentication.RadiusEndpointType'
+      redirect_url:
+        type: string
+      secure_interface:
+        type: string
+      session_idle:
+        type: integer
+    type: object
   types.CredentialType:
     properties:
       password:
         type: string
       username:
         type: string
+    type: object
+  types.EndpointType:
+    properties:
+      hostname:
+        type: string
+      port:
+        type: integer
+    type: object
+  types.ExtendConfigType:
+    properties:
+      administrator:
+        $ref: '#/definitions/types.CredentialType'
+      allow_endpoints:
+        items:
+          $ref: '#/definitions/types.EndpointType'
+        type: array
+      bypass_networks:
+        items:
+          type: string
+        type: array
+      ddos_prevention:
+        type: boolean
+      domain_names:
+        properties:
+          auth_domain_name:
+            type: string
+          operator_domain_name:
+            type: string
+        type: object
+      egress_interface:
+        type: string
+      external_portal_url:
+        type: string
+      fqdn_blocklist:
+        items:
+          type: string
+        type: array
+      html:
+        $ref: '#/definitions/types.HTMLType'
+      ldap:
+        $ref: '#/definitions/authentication.LDAPEndpointType'
+      max_concurrent_session:
+        type: integer
+      radius:
+        $ref: '#/definitions/authentication.RadiusEndpointType'
+      redirect_url:
+        type: string
+      secure_interface:
+        type: string
+      session_idle:
+        type: integer
+      status:
+        properties:
+          egress_ip_address:
+            type: string
+          secure_ip_address:
+            type: string
+        type: object
     type: object
   types.HTMLType:
     properties:
@@ -159,6 +298,90 @@ paths:
       summary: Check is administrator
       tags:
       - Operator
+  /api/config:
+    get:
+      consumes:
+      - application/json
+      description: Get config
+      operationId: get-config
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.ExtendConfigType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Get config
+      tags:
+      - Operator
+    put:
+      consumes:
+      - application/json
+      description: Set config
+      operationId: set-config
+      parameters:
+      - description: Parameters
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/types.ConfigType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: updated
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Set config
+      tags:
+      - Operator
+  /api/count-all-session:
+    get:
+      consumes:
+      - application/json
+      description: Count all session
+      operationId: count-all-session
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: count
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - ApiKeyAuth: []
+      summary: Count all session
+      tags:
+      - Operator
   /api/get-all-session:
     get:
       consumes:
@@ -187,19 +410,19 @@ paths:
       summary: Get all session
       tags:
       - Operator
-  /api/html-properties:
+  /api/get-captive-portal-config-fundamental:
     get:
       consumes:
       - application/json
-      description: Get html properties
-      operationId: html-properties
+      description: Captive portal config fundamental
+      operationId: get-captive-portal-config-fundamental
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/types.HTMLType'
+            $ref: '#/definitions/types.CaptivePortalConfigFundamentalType'
         "400":
           description: Bad Request
           schema:
@@ -208,9 +431,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get html properties
+      summary: Captive portal config fundamental
       tags:
-      - HTML
+      - Utils
   /api/initialize:
     get:
       consumes:
@@ -330,6 +553,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: To kick via username
+      tags:
+      - Operator
+  /api/net-intf-usage:
+    get:
+      consumes:
+      - application/json
+      description: Network Interfaces Usage
+      operationId: net-interfaces-bytes-usage
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Network Interfaces Usage
       tags:
       - Operator
   /api/revoke-administrator:

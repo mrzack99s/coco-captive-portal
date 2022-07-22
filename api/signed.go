@@ -74,5 +74,16 @@ func (ctl *operatorController) getAdminSigned(c *gin.Context) {
 		return
 	}
 
+	tokenString := c.Request.Header.Get("api-token")
+	token, _ := utils.CacheGetString("temp", "admtoken")
+	if tokenString != token {
+		msg := "admin: token not correct"
+		config.AppLog.Error().Msg(msg)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg": msg,
+		})
+		return
+	}
+
 	c.String(http.StatusOK, "found")
 }

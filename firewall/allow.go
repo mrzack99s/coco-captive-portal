@@ -11,7 +11,7 @@ func AllowAccess(ss *types.SessionType) (err error) {
 		return
 	}
 
-	err = IPT.Insert("filter", "FORWARD", 1, "-s", ss.IPAddress, "-i", config.Config.SecureInterface, "-j", "ACCEPT")
+	err = IPT.Insert("filter", "FORWARD", last_fqdn_blacklist_rule_num, "-s", ss.IPAddress, "-i", config.Config.SecureInterface, "-j", "ACCEPT")
 	if err != nil {
 		return
 	}

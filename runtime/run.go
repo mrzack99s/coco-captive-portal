@@ -15,6 +15,7 @@ import (
 	"github.com/mrzack99s/coco-captive-portal/constants"
 	_ "github.com/mrzack99s/coco-captive-portal/docs"
 	"github.com/mrzack99s/coco-captive-portal/firewall"
+	"github.com/mrzack99s/coco-captive-portal/services"
 	"github.com/mrzack99s/coco-captive-portal/utils"
 	"github.com/mrzack99s/coco-captive-portal/watcher"
 	swaggerfiles "github.com/swaggo/files"
@@ -34,6 +35,10 @@ func AppRunner(flag ...bool) {
 	utils.CacheDeleteWithPrefix(constants.SCHEMA_DNS_CACHE)
 	utils.CacheDeleteWithPrefix("temp")
 
+	if flag[0] {
+		gin.SetMode(gin.ReleaseMode)
+
+	}
 	err := firewall.InitializeCaptivePortal()
 	if err != nil {
 		panic(err)
@@ -44,7 +49,7 @@ func AppRunner(flag ...bool) {
 	watcher.CaptivePortalDetector(context.Background(), flag...)
 
 	if config.Config.DDOSPrevention {
-		watcher.DDOSPreventor(context.Background())
+		services.StartDDOSPreventor()
 	}
 
 	if config.Config.LDAP != nil {
@@ -52,10 +57,6 @@ func AppRunner(flag ...bool) {
 			config.AppLog.Error().Msg("Cannot connect to LDAP Server")
 			os.Exit(0)
 		}
-	}
-
-	if flag[0] {
-		gin.SetMode(gin.ReleaseMode)
 	}
 
 	go operatorRuntime(flag...)

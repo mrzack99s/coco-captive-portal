@@ -17,6 +17,9 @@ import AppPropertiesProvider from './utils/properties';
 import ApiProvider from './utils/api-connector';
 import { CookiesProvider } from 'react-cookie';
 import Overview from './views/overview';
+import ViewConfig from './views/config';
+import PolicyNObjects from './views/policy-n-objects';
+import SessionMonitor from './views/session-monitor';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -30,6 +33,9 @@ root.render(
             <Route path='*' element={<Navigate to="/sign-in" replace />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/overview" element={<Overview />} />
+            <Route path="/session-monitor" element={<SessionMonitor />} />
+            <Route path="/config" element={<ViewConfig />} />
+            <Route path="/policy-and-objects" element={<PolicyNObjects />} />
           </Routes>
         </AppPropertiesProvider>
       </BrowserRouter>

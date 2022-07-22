@@ -9,6 +9,20 @@
  * ---------------------------------------------------------------
  */
 
+export interface AuthenticationLDAPEndpointType {
+  domain_names?: string[];
+  hostname?: string;
+  port?: number;
+  single_domain?: boolean;
+  tls_enable?: boolean;
+}
+
+export interface AuthenticationRadiusEndpointType {
+  hostname?: string;
+  port?: number;
+  secret?: string;
+}
+
 export type GinH = Record<string, any>;
 
 export interface TypesAuthorizedResponseType {
@@ -17,15 +31,64 @@ export interface TypesAuthorizedResponseType {
   status?: string;
 }
 
+export interface TypesCaptivePortalConfigFundamentalType {
+  domain_names?: string[];
+  html?: TypesHTMLType;
+  mode?: string;
+  single_domain?: boolean;
+}
+
 export interface TypesCheckCredentialType {
   password?: string;
   secret?: string;
   username?: string;
 }
 
+export interface TypesConfigType {
+  administrator?: TypesCredentialType;
+  allow_endpoints?: TypesEndpointType[];
+  bypass_networks?: string[];
+  ddos_prevention?: boolean;
+  domain_names?: { auth_domain_name?: string; operator_domain_name?: string };
+  egress_interface?: string;
+  external_portal_url?: string;
+  fqdn_blocklist?: string[];
+  html?: TypesHTMLType;
+  ldap?: AuthenticationLDAPEndpointType;
+  max_concurrent_session?: number;
+  radius?: AuthenticationRadiusEndpointType;
+  redirect_url?: string;
+  secure_interface?: string;
+  session_idle?: number;
+}
+
 export interface TypesCredentialType {
   password?: string;
   username?: string;
+}
+
+export interface TypesEndpointType {
+  hostname?: string;
+  port?: number;
+}
+
+export interface TypesExtendConfigType {
+  administrator?: TypesCredentialType;
+  allow_endpoints?: TypesEndpointType[];
+  bypass_networks?: string[];
+  ddos_prevention?: boolean;
+  domain_names?: { auth_domain_name?: string; operator_domain_name?: string };
+  egress_interface?: string;
+  external_portal_url?: string;
+  fqdn_blocklist?: string[];
+  html?: TypesHTMLType;
+  ldap?: AuthenticationLDAPEndpointType;
+  max_concurrent_session?: number;
+  radius?: AuthenticationRadiusEndpointType;
+  redirect_url?: string;
+  secure_interface?: string;
+  session_idle?: number;
+  status?: { egress_ip_address?: string; secure_ip_address?: string };
 }
 
 export interface TypesHTMLType {
@@ -323,6 +386,64 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Get config
+     *
+     * @tags Operator
+     * @name GetConfig
+     * @summary Get config
+     * @request GET:/api/config
+     * @secure
+     */
+    getConfig: (params: RequestParams = {}) =>
+      this.request<TypesExtendConfigType, GinH>({
+        path: `/api/config`,
+        method: "GET",
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Set config
+     *
+     * @tags Operator
+     * @name SetConfig
+     * @summary Set config
+     * @request PUT:/api/config
+     * @secure
+     */
+    setConfig: (params: TypesConfigType, requestParams: RequestParams = {}) =>
+      this.request<string, GinH>({
+        path: `/api/config`,
+        method: "PUT",
+        body: params,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...requestParams,
+      }),
+
+    /**
+     * @description Count all session
+     *
+     * @tags Operator
+     * @name CountAllSession
+     * @summary Count all session
+     * @request GET:/api/count-all-session
+     * @secure
+     */
+    countAllSession: (params: RequestParams = {}) =>
+      this.request<string, GinH>({
+        path: `/api/count-all-session`,
+        method: "GET",
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
      * @description Get all session
      *
      * @tags Operator
@@ -342,16 +463,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Get html properties
+     * @description Captive portal config fundamental
      *
-     * @tags HTML
-     * @name HtmlProperties
-     * @summary Get html properties
-     * @request GET:/api/html-properties
+     * @tags Utils
+     * @name GetCaptivePortalConfigFundamental
+     * @summary Captive portal config fundamental
+     * @request GET:/api/get-captive-portal-config-fundamental
      */
-    htmlProperties: (params: RequestParams = {}) =>
-      this.request<TypesHTMLType, GinH>({
-        path: `/api/html-properties`,
+    getCaptivePortalConfigFundamental: (params: RequestParams = {}) =>
+      this.request<TypesCaptivePortalConfigFundamentalType, GinH>({
+        path: `/api/get-captive-portal-config-fundamental`,
         method: "GET",
         type: ContentType.Json,
         format: "json",
@@ -431,6 +552,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         type: ContentType.Json,
         format: "json",
         ...requestParams,
+      }),
+
+    /**
+     * @description Network Interfaces Usage
+     *
+     * @tags Operator
+     * @name NetInterfacesBytesUsage
+     * @summary Network Interfaces Usage
+     * @request GET:/api/net-intf-usage
+     */
+    netInterfacesBytesUsage: (params: RequestParams = {}) =>
+      this.request<GinH, GinH>({
+        path: `/api/net-intf-usage`,
+        method: "GET",
+        type: ContentType.Json,
+        format: "json",
+        ...params,
       }),
 
     /**

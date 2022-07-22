@@ -42,31 +42,32 @@ func InitializeCaptivePortal() (err error) {
 		_, host, port, _ := utils.ParseURL(config.Config.ExternalPortalURL)
 		hostIp, _ := utils.ResolveIp(host)
 
-		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", port, "-d", hostIp, "-j", "ACCEPT")
+		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--match", "multiport", "--dports", fmt.Sprintf("%s,8080,8443", port), "-d", hostIp, "-j", "ACCEPT")
 		if err != nil {
 			return
 		}
 	} else {
-		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "443", "-d", interfaceIp, "-j", "ACCEPT")
+		err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--match", "multiport", "--dports", "443,8080,8443", "-d", interfaceIp, "-j", "ACCEPT")
 		if err != nil {
 			return
 		}
 	}
 
-	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8080", "-d", interfaceIp, "-j", "ACCEPT")
-	if err != nil {
-		return
-	}
-
-	err = IPT.AppendUnique("filter", "FORWARD", "-s", "0.0.0.0/0", "-p", "tcp", "-i", config.Config.SecureInterface, "--dport", "8443", "-d", interfaceIp, "-j", "ACCEPT")
-	if err != nil {
-		return
-	}
-
+	initFQDNBlocklist()
 	allowEndpoints()
 	bypassNetworks()
 	initFinally()
 
+	return
+}
+
+func initFQDNBlocklist() (err error) {
+	for _, pattern := range config.Config.FQDNBlocklist {
+		err = AddFQDNBlacklist(pattern)
+		if err != nil {
+			return
+		}
+	}
 	return
 }
 

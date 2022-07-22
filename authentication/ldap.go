@@ -3,6 +3,7 @@ package authentication
 import (
 	"crypto/tls"
 	"fmt"
+	"strings"
 
 	"github.com/go-ldap/ldap/v3"
 )
@@ -34,38 +35,36 @@ func (l *LDAPEndpointType) Connect() (err error) {
 
 func (l *LDAPEndpointType) Authentication(username, password string) (err error) {
 
-	if l.Product != "google" {
-		pass := false
+	l.Connect()
+	pass := false
 
-		err = l.Connect()
-		if err != nil {
+	if l.SingleDomain {
+		splitString := strings.Split(username, "@")
+		if splitString[1] == l.DomainNames[0] {
+			pass = true
+		} else {
+			err = fmt.Errorf("username %s is not authorized by the domain name", username)
 			return
 		}
 
-		for _, bdn := range l.AllowBaseDN {
-			err = l.instance.Bind(fmt.Sprintf("cn=%s,%s", username, bdn), password)
-			if err == nil {
+	} else {
+		splitString := strings.Split(username, "@")
+		for _, domain := range l.DomainNames {
+			if splitString[1] == domain {
 				pass = true
 				break
 			}
 		}
-
 		if !pass {
-			err = fmt.Errorf("%s authentication failed", username)
+			err = fmt.Errorf("username %s is not authorized by the domain name", username)
 			return
 		}
-	} else {
+	}
 
-		err = l.Connect()
-		if err != nil {
-			return
-		}
-		err = l.instance.Bind(username, password)
-		if err != nil {
-			err = fmt.Errorf("%s authentication failed", username)
-			return
-		}
-
+	err = l.instance.Bind(username, password)
+	if err != nil {
+		err = fmt.Errorf("%s credentials are invalid", username)
+		return
 	}
 
 	l.instance.Unbind()

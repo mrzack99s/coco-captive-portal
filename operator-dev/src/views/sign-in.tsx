@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 import { Copyright } from '../components/copyright';
 
 /* eslint-disable */
-function SignIn() {
+export default () => {
     const apiInstance = useApiConnector();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -29,7 +29,6 @@ function SignIn() {
         })
             .then(res => res.data)
             .then(res => {
-                console.log(res)
                 let now = new Date();
                 now.setTime(now.getTime() + 1 * 60 * 60 * 1000);
                 setCookies("api-token", res.api_token, {
@@ -37,7 +36,7 @@ function SignIn() {
                 })
                 toast.current.show({ severity: 'success', summary: 'Success', detail: "Signed", life: 3000 });
                 setPageWaiting(false)
-                navigate("/operator/monitor")
+                navigate("/overview")
             })
             .catch(() => {
                 toast.current.show({ severity: 'error', summary: 'Error', detail: "Wrong credential!", life: 3000 });
@@ -113,6 +112,3 @@ function SignIn() {
         </>
     );
 }
-
-export default SignIn;
-

@@ -19,3 +19,16 @@ code {
   transition: box-shadow 0.2s;
   user-select: none;
 }
+
+.custom-fieldset-p0.p-fieldset .p-fieldset-content {
+  padding: 0 !important;
+}
+
+.custom-fieldset-p0.p-fieldset .p-fieldset-legend {
+  padding: 0.5rem;
+  border: 1px solid #a19f9d;
+  background: #faf9f8;
+  font-weight: 600;
+  border-radius: 5px;
+  font-size: 0.75rem !important;
+}

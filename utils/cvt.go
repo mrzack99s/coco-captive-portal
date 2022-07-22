@@ -16,6 +16,16 @@ func StringToInt64(s string) (v int64, err error) {
 	return
 }
 
+func StringToUInt64(s string) (v uint64, err error) {
+	iVal, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		return
+	}
+
+	v = iVal
+	return
+}
+
 func Int64ToString(s int64) (v string) {
 	v = fmt.Sprintf("%d", s)
 	return

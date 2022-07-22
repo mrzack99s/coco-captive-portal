@@ -7,6 +7,8 @@ import { Divider } from "primereact/divider";
 import './custom.css'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
+import { useAdminApiConnector } from "../utils/api-connector";
+import { useToast } from "../utils/properties";
 
 const items = [
     {
@@ -14,25 +16,39 @@ const items = [
         icon: "pi pi-building",
         items: [
             {
-                label: "View config",
-                icon: "pi pi-sliders-h",
-                url: "/view-config"
+                label: "Session Monitor",
+                icon: "mdi mdi-monitor-eye",
+                url: "/session-monitor"
             },
             {
                 separator: true,
             },
             {
-                label: "Policies",
-                disabled: true,
-                icon: "mdi mdi-arrow-decision",
+                label: "Policy and Objects",
+                icon: "mdi mdi-cube-outline",
+                url: "/policy-and-objects"
+            },
+            {
+                label: "Config",
+                icon: "pi pi-sliders-h",
+                url: "/config"
             },
         ],
     },
 ];
 
 export default () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['role']);
+    const [cookies, setCookie, removeCookie] = useCookies(['role', 'api-token']);
     const navigate = useNavigate()
+    const apiInstance = useAdminApiConnector()
+    const toast = useToast();
+
+    const revokeAdmin = () => {
+        apiInstance.api.revokeAdministrator()
+        removeCookie("api-token")
+        toast.current.show({ severity: 'success', summary: 'Success', detail: `Sigend out`, life: 3000 });
+        navigate("/operator/sign-in")
+    }
 
     const end = () => (
         <>
@@ -70,8 +86,9 @@ export default () => {
                     <span className="text-sm">Preferences</span>
                 </Divider>
                 <div className="mt-4 text-center">
-                    <Button label="Change Password" className="mr-2 text-xs text-white p-button-warning" />
-                    <Button label="Sign Out" className="text-xs p-button-danger" icon="pi pi-sign-out" />
+                    <Button label="Sign Out" className="text-xs p-button-danger" icon="pi pi-sign-out" onClick={() => {
+                        revokeAdmin()
+                    }} />
                 </div>
             </Sidebar>
 

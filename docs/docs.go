@@ -150,6 +150,138 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/config": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get config",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Operator"
+                ],
+                "summary": "Get config",
+                "operationId": "get-config",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.ExtendConfigType"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Set config",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Operator"
+                ],
+                "summary": "Set config",
+                "operationId": "set-config",
+                "parameters": [
+                    {
+                        "description": "Parameters",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ConfigType"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "updated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/count-all-session": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Count all session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Operator"
+                ],
+                "summary": "Count all session",
+                "operationId": "count-all-session",
+                "responses": {
+                    "200": {
+                        "description": "count",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/api/get-all-session": {
             "get": {
                 "security": [
@@ -194,9 +326,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/html-properties": {
+        "/api/get-captive-portal-config-fundamental": {
             "get": {
-                "description": "Get html properties",
+                "description": "Captive portal config fundamental",
                 "consumes": [
                     "application/json"
                 ],
@@ -204,15 +336,15 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "HTML"
+                    "Utils"
                 ],
-                "summary": "Get html properties",
-                "operationId": "html-properties",
+                "summary": "Captive portal config fundamental",
+                "operationId": "get-captive-portal-config-fundamental",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/types.HTMLType"
+                            "$ref": "#/definitions/types.CaptivePortalConfigFundamentalType"
                         }
                     },
                     "400": {
@@ -417,6 +549,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/net-intf-usage": {
+            "get": {
+                "description": "Network Interfaces Usage",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Operator"
+                ],
+                "summary": "Network Interfaces Usage",
+                "operationId": "net-interfaces-bytes-usage",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/api/revoke-administrator": {
             "get": {
                 "security": [
@@ -532,6 +700,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "authentication.LDAPEndpointType": {
+            "type": "object",
+            "properties": {
+                "domain_names": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "single_domain": {
+                    "type": "boolean"
+                },
+                "tls_enable": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "authentication.RadiusEndpointType": {
+            "type": "object",
+            "properties": {
+                "hostname": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "secret": {
+                    "type": "string"
+                }
+            }
+        },
         "gin.H": {
             "type": "object",
             "additionalProperties": {
@@ -552,6 +757,26 @@ const docTemplate = `{
                 }
             }
         },
+        "types.CaptivePortalConfigFundamentalType": {
+            "type": "object",
+            "properties": {
+                "domain_names": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "html": {
+                    "$ref": "#/definitions/types.HTMLType"
+                },
+                "mode": {
+                    "type": "string"
+                },
+                "single_domain": {
+                    "type": "boolean"
+                }
+            }
+        },
         "types.CheckCredentialType": {
             "type": "object",
             "properties": {
@@ -566,6 +791,73 @@ const docTemplate = `{
                 }
             }
         },
+        "types.ConfigType": {
+            "type": "object",
+            "properties": {
+                "administrator": {
+                    "$ref": "#/definitions/types.CredentialType"
+                },
+                "allow_endpoints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.EndpointType"
+                    }
+                },
+                "bypass_networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ddos_prevention": {
+                    "type": "boolean"
+                },
+                "domain_names": {
+                    "type": "object",
+                    "properties": {
+                        "auth_domain_name": {
+                            "type": "string"
+                        },
+                        "operator_domain_name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "egress_interface": {
+                    "type": "string"
+                },
+                "external_portal_url": {
+                    "type": "string"
+                },
+                "fqdn_blocklist": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "html": {
+                    "$ref": "#/definitions/types.HTMLType"
+                },
+                "ldap": {
+                    "$ref": "#/definitions/authentication.LDAPEndpointType"
+                },
+                "max_concurrent_session": {
+                    "type": "integer"
+                },
+                "radius": {
+                    "$ref": "#/definitions/authentication.RadiusEndpointType"
+                },
+                "redirect_url": {
+                    "type": "string"
+                },
+                "secure_interface": {
+                    "type": "string"
+                },
+                "session_idle": {
+                    "type": "integer"
+                }
+            }
+        },
         "types.CredentialType": {
             "type": "object",
             "properties": {
@@ -574,6 +866,95 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "types.EndpointType": {
+            "type": "object",
+            "properties": {
+                "hostname": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.ExtendConfigType": {
+            "type": "object",
+            "properties": {
+                "administrator": {
+                    "$ref": "#/definitions/types.CredentialType"
+                },
+                "allow_endpoints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.EndpointType"
+                    }
+                },
+                "bypass_networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ddos_prevention": {
+                    "type": "boolean"
+                },
+                "domain_names": {
+                    "type": "object",
+                    "properties": {
+                        "auth_domain_name": {
+                            "type": "string"
+                        },
+                        "operator_domain_name": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "egress_interface": {
+                    "type": "string"
+                },
+                "external_portal_url": {
+                    "type": "string"
+                },
+                "fqdn_blocklist": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "html": {
+                    "$ref": "#/definitions/types.HTMLType"
+                },
+                "ldap": {
+                    "$ref": "#/definitions/authentication.LDAPEndpointType"
+                },
+                "max_concurrent_session": {
+                    "type": "integer"
+                },
+                "radius": {
+                    "$ref": "#/definitions/authentication.RadiusEndpointType"
+                },
+                "redirect_url": {
+                    "type": "string"
+                },
+                "secure_interface": {
+                    "type": "string"
+                },
+                "session_idle": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "object",
+                    "properties": {
+                        "egress_ip_address": {
+                            "type": "string"
+                        },
+                        "secure_ip_address": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },

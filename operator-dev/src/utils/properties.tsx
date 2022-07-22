@@ -1,11 +1,13 @@
 import { useContext, createContext, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useApiConnector } from "./api-connector";
+import { useAdminApiConnector, useApiConnector } from "./api-connector";
 import { Toast } from "primereact/toast";
 import { TypesHTMLType } from "../api";
 import { Button } from 'primereact/button';
 import { useCookies } from "react-cookie";
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Tooltip } from 'primereact/tooltip';
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 type ContextProps = {
     issue: string
@@ -35,7 +37,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
     const navigate = useNavigate()
     const location = useLocation();
     const [pageWaiting, setPageWaiting] = useState(false)
-    const apiInstance = useApiConnector();
+    const apiInstance = useAdminApiConnector();
     const toast = useRef({} as any)
     const [cookies, , removeCookies] = useCookies(["api-token"])
 
@@ -64,6 +66,7 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
 
         <AppPropertiesContext.Provider value={{ redirectUrl: redirectUrl, setRedirectUrl: setRedirectUrl, lang: lang, setWaiting: setPageWaiting, issue: issue, initSecret: initSecret, setInitSecret: setInitSecret, htmlProperties: htmlProperties, toastRef: toast }}>
             <Toast ref={toast} />
+            <ConfirmDialog />
             {pageWaiting &&
                 <div className="bg-gray-50 h-screen w-screen" style={{ position: 'fixed', zIndex: 1, opacity: 0.8 }}>
                     <div className="flex align-items-center h-screen justify-content-center">
@@ -78,7 +81,6 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
 
                 </div>
             }
-
 
             {location.pathname.includes("/sign-in") &&
                 <span className="p-buttonset" style={{
@@ -98,7 +100,6 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                         className={`p-button-xs pt-1 px-3 text-sm ${lang !== "th" ? "p-button-outlined" : ""}`} />
                 </span>
             }
-
             {children}
         </AppPropertiesContext.Provider>
     );

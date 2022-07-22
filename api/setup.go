@@ -35,14 +35,9 @@ func NewOperatorController(router gin.IRouter) *operatorController {
 func tokenMiddleware(c *gin.Context) {
 	tokenString := c.Request.Header.Get("api-token")
 
-	token, err := utils.CacheGetString(constants.SCHEMA_CONFIG, "api-token")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, "not found token in config, please renew an api token")
-		c.Abort()
-		return
-	}
+	token, _ := utils.CacheGetString(constants.SCHEMA_CONFIG, "api-token")
 	if tokenString != token {
-		token, err = utils.CacheGetString("temp", "admtoken")
+		token, err := utils.CacheGetString("temp", "admtoken")
 		if err != nil || tokenString != token {
 			c.JSON(http.StatusUnauthorized, "not authorized")
 			c.Abort()
@@ -58,17 +53,21 @@ func (ctl *authController) register() {
 	ctl.router.GET("/initialize", ctl.getInitialize)
 	ctl.router.GET("/sign-out", ctl.signout)
 	ctl.router.GET("/signed", ctl.getSigned)
-	ctl.router.GET("/html-properties", ctl.getHTMLProperties)
 	ctl.router.POST("/authentication", ctl.getAuthentication)
 	ctl.router.POST("/is-exist-initialize-secret", ctl.isExistInitializeSecret)
+	ctl.router.GET("/get-captive-portal-config-fundamental", ctl.getCaptivePortalConfigFundamental)
 }
 
 func (ctl *operatorController) register() {
 
 	ctl.router.PUT("/kick-username", tokenMiddleware, ctl.kickSessionViaUsername)
 	ctl.router.PUT("/kick-ip-address", tokenMiddleware, ctl.kickSessionViaIPAddress)
+	ctl.router.PUT("/config", tokenMiddleware, ctl.setConfig)
 	ctl.router.GET("/get-all-session", tokenMiddleware, ctl.getAllSession)
+	ctl.router.GET("/count-all-session", tokenMiddleware, ctl.countAllSession)
 	ctl.router.GET("/revoke-administrator", tokenMiddleware, ctl.revokeAdministrator)
+	ctl.router.GET("/config", tokenMiddleware, ctl.getConfig)
 	ctl.router.GET("/adm-signed", ctl.getAdminSigned)
 	ctl.router.POST("/check-is-administrator", ctl.checkIsAdministrator)
+	ctl.router.GET("/net-intf-usage", ctl.getNetInterfacesUsage)
 }

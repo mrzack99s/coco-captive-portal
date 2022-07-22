@@ -16,3 +16,10 @@ type AuthorizedResponseType struct {
 	Issue       string `json:"issue"`
 	RedirectURL string `json:"redirect_url"`
 }
+
+type CaptivePortalConfigFundamentalType struct {
+	Mode         string   `json:"mode"`
+	SingleDomain bool     `json:"single_domain"`
+	DomainNames  []string `json:"domain_names"`
+	HTML         HTMLType `json:"html"`
+}

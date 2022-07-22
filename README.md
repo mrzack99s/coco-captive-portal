@@ -14,6 +14,7 @@ Please check the [releases](https://github.com/mrzack99s/coco-captive-portal/rel
 - OS
   - Ubuntu: 18.04, 20.04
   - Debian: 10, 11
+- IP Address of an interface and prepare routing table
 
 ## Authentication protocol supports
 

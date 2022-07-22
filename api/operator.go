@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mrzack99s/coco-captive-portal/config"
 	"github.com/mrzack99s/coco-captive-portal/constants"
+	"github.com/mrzack99s/coco-captive-portal/services"
 	"github.com/mrzack99s/coco-captive-portal/session"
 	"github.com/mrzack99s/coco-captive-portal/types"
 	"github.com/mrzack99s/coco-captive-portal/utils"
@@ -178,6 +179,33 @@ func (ctl *operatorController) getAllSession(c *gin.Context) {
 }
 
 // Headers godoc
+// @Summary Count all session
+// @Description Count all session
+// @ID count-all-session
+// @Accept   json
+// @Tags	 Operator
+// @Produce  json
+// @security ApiKeyAuth
+// @Success 200 {string} string "count"
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /api/count-all-session [get]
+func (ctl *operatorController) countAllSession(c *gin.Context) {
+	allKey, err := utils.CacheGetAllKey(constants.SCHEMA_SESSION)
+	if err != nil {
+		msg := fmt.Sprintf("get-all-session: %s", err.Error())
+		config.AppLog.Error().Msg(msg)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"msg": msg,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, len(allKey))
+
+}
+
+// Headers godoc
 // @Summary Check is administrator
 // @Description Check is administrator
 // @ID check-is-administrator
@@ -200,7 +228,7 @@ func (ctl *operatorController) checkIsAdministrator(c *gin.Context) {
 		return
 	}
 
-	if ss.Username == config.Config.Administrator.Username && ss.Password == config.Config.Administrator.Password {
+	if ss.Username == config.Config.Administrator.Username && utils.Sha512encode(ss.Password) == config.Config.Administrator.Password {
 		newToken := utils.SecretGenerator(64)
 		err := utils.CacheSetWithTimeDuration("temp", "admtoken", newToken, time.Hour*1)
 		if err != nil {
@@ -253,5 +281,34 @@ func (ctl *operatorController) revokeAdministrator(c *gin.Context) {
 	}
 
 	c.String(http.StatusOK, "revoked")
+
+}
+
+// Headers godoc
+// @Summary Network Interfaces Usage
+// @Description Network Interfaces Usage
+// @ID net-interfaces-bytes-usage
+// @Accept   json
+// @Tags	Operator
+// @Produce  json
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /api/net-intf-usage [get]
+func (ctl *operatorController) getNetInterfacesUsage(c *gin.Context) {
+
+	secureIntfRx, secureIntfTx := services.GetNetInterfaceBytes(config.Config.SecureInterface)
+	egressIntfRx, egressIntfTx := services.GetNetInterfaceBytes(config.Config.EgressInterface)
+
+	c.JSON(http.StatusOK, gin.H{
+		"secure_interface": gin.H{
+			"rx": secureIntfRx,
+			"tx": secureIntfTx,
+		},
+		"egress_interface": gin.H{
+			"rx": egressIntfRx,
+			"tx": egressIntfTx,
+		},
+	})
 
 }

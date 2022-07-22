@@ -3,18 +3,16 @@ package authentication
 import "github.com/go-ldap/ldap/v3"
 
 type RadiusEndpointType struct {
-	Hostname string `yaml:"hostname"`
-	Port     uint   `yaml:"port"`
-	Secret   string `yaml:"secret"`
+	Hostname string `yaml:"hostname" json:"hostname"`
+	Port     uint64 `yaml:"port" json:"port"`
+	Secret   string `yaml:"secret" json:"secret"`
 }
 
 type LDAPEndpointType struct {
-	Product      string   `yaml:"product"`
-	Hostname     string   `yaml:"hostname"`
-	BindUsername string   `yaml:"bind_username"`
-	BindPassword string   `yaml:"bind_password"`
-	Port         uint     `yaml:"port"`
-	TLSEnable    bool     `yaml:"tls_enable"`
-	AllowBaseDN  []string `yaml:"allow_base_dn"`
+	Hostname     string   `yaml:"hostname" json:"hostname"`
+	Port         uint64   `yaml:"port" json:"port"`
+	TLSEnable    bool     `yaml:"tls_enable" json:"tls_enable"`
+	SingleDomain bool     `yaml:"single_domain" json:"single_domain"`
+	DomainNames  []string `yaml:"domain_names" json:"domain_names"`
 	instance     *ldap.Conn
 }

@@ -31,7 +31,7 @@ func main() {
 		MaxAge:                90,
 		MaxBackups:            90,
 	}
-	config.NetLog = netLogger.Configure()
+	config.NetLog = netLogger.ConfigureWithoutDisplay()
 
 	appLogger := config.LoggingConfig{
 		ConsoleLoggingEnabled: true,
@@ -47,8 +47,6 @@ func main() {
 	if !utils.IsRootPrivilege() {
 		panic(`this application needs the ability to run commands as root. We are unable to find either "sudo" or "su" available to make this happen.`)
 	}
-
-	// Setup Cache
 
 	var cmdRun = &cobra.Command{
 		Use:   "run",

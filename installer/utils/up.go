@@ -15,6 +15,11 @@ func UpInstaller() {
 		os.Exit(0)
 	}
 
+	if err := defineConfig(); err != nil {
+		log.Error().Msg("define config failed")
+		os.Exit(0)
+	}
+
 	if err := installPackages(); err != nil {
 		log.Error().Msg("package install failed")
 		os.Exit(0)

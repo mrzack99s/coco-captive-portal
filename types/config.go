@@ -3,38 +3,34 @@ package types
 import "github.com/mrzack99s/coco-captive-portal/authentication"
 
 type ConfigType struct {
-	ExternalPortalURL    string                             `yaml:"external_portal_url"`
-	EgressInterface      string                             `yaml:"egress_interface"`
-	SecureInterface      string                             `yaml:"secure_interface"`
-	SessionIdle          uint                               `yaml:"session_idle"`
-	MaxConcurrentSession uint                               `yaml:"max_concurrent_session"`
-	BypassNetworks       []string                           `yaml:"bypass_networks"`
-	AllowEndpoints       []EndpointType                     `yaml:"allow_endpoints"`
-	RedirectURL          string                             `yaml:"redirect_url"`
-	Radius               *authentication.RadiusEndpointType `yaml:"radius"`
-	LDAP                 *authentication.LDAPEndpointType   `yaml:"ldap"`
-	HTML                 HTMLType                           `yaml:"html"`
-	Administrator        CredentialType                     `yaml:"administrator"`
-	DNSProxy             DNSProxyType                       `yaml:"dns_proxy"`
+	ExternalPortalURL    string                             `yaml:"external_portal_url" json:"external_portal_url"`
+	EgressInterface      string                             `yaml:"egress_interface" json:"egress_interface"`
+	SecureInterface      string                             `yaml:"secure_interface" json:"secure_interface"`
+	SessionIdle          uint64                             `yaml:"session_idle" json:"session_idle"`
+	MaxConcurrentSession uint64                             `yaml:"max_concurrent_session" json:"max_concurrent_session"`
+	BypassNetworks       []string                           `yaml:"bypass_networks" json:"bypass_networks"`
+	AllowEndpoints       []EndpointType                     `yaml:"allow_endpoints" json:"allow_endpoints"`
+	RedirectURL          string                             `yaml:"redirect_url" json:"redirect_url"`
+	Radius               *authentication.RadiusEndpointType `yaml:"radius" json:"radius"`
+	LDAP                 *authentication.LDAPEndpointType   `yaml:"ldap" json:"ldap"`
+	HTML                 HTMLType                           `yaml:"html" json:"html"`
+	Administrator        CredentialType                     `yaml:"administrator" json:"administrator"`
 	DomainNames          struct {
-		OperatorDomainName string `yaml:"operator_domain_name"`
-		AuthDomainName     string `yaml:"auth_domain_name"`
-	} `yaml:"domain_names"`
-	DDOSPrevention bool `yaml:"ddos_prevention"`
+		OperatorDomainName string `yaml:"operator_domain_name" json:"operator_domain_name"`
+		AuthDomainName     string `yaml:"auth_domain_name" json:"auth_domain_name"`
+	} `yaml:"domain_names" json:"domain_names"`
+	DDOSPrevention bool     `yaml:"ddos_prevention" json:"ddos_prevention"`
+	FQDNBlocklist  []string `yaml:"fqdn_blocklist" json:"fqdn_blocklist"`
 }
 
 type EndpointType struct {
-	Hostname string `yaml:"hostname"`
-	Port     uint   `yaml:"port"`
-}
-
-type DNSProxyType struct {
-	Forward string `yaml:"forward"`
+	Hostname string `yaml:"hostname" json:"hostname"`
+	Port     uint64 `yaml:"port" json:"port"`
 }
 
 type CredentialType struct {
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Username string `yaml:"username" json:"username"`
+	Password string `yaml:"password" json:"password"`
 }
 
 type HTMLType struct {
@@ -45,4 +41,12 @@ type HTMLType struct {
 	ThSubTitle         string `yaml:"th_sub_title" json:"th_sub_title"`
 	LogoFileName       string `yaml:"logo_file_name" json:"logo_file_name"`
 	BackgroundFileName string `yaml:"background_file_name" json:"background_file_name"`
+}
+
+type ExtendConfigType struct {
+	ConfigType
+	Status struct {
+		EgressIPAddress string `yaml:"egress_ip_address" json:"egress_ip_address"`
+		SecureIPAddress string `yaml:"secure_ip_address" json:"secure_ip_address"`
+	} `yaml:"status" json:"status"`
 }

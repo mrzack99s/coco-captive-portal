@@ -1,8 +1,6 @@
 package config
 
 import (
-	"context"
-
 	"github.com/mrzack99s/coco-captive-portal/types"
 	"github.com/rs/zerolog"
 )
@@ -37,16 +35,4 @@ var (
 		"http://www.google.cn/generate_204",
 		"http://edge.microsoft.com/captiveportal/generate_204",
 	}
-	DETECTOR_CONTEXT             context.Context
-	DETECTOR_CONTEXT_CANCEL_FUNC context.CancelFunc
-	AUTH_CONTEXT                 context.Context
-	AUTH_CONTEXT_CANCEL_FUNC     context.CancelFunc
-	NET_WATCHER_CONTEXT          context.Context
-	NET_WATCHER_CANCEL_FUNC      context.CancelFunc
 )
-
-func init() {
-	DETECTOR_CONTEXT, DETECTOR_CONTEXT_CANCEL_FUNC = context.WithCancel(context.Background())
-	AUTH_CONTEXT, AUTH_CONTEXT_CANCEL_FUNC = context.WithCancel(context.Background())
-	NET_WATCHER_CONTEXT, NET_WATCHER_CANCEL_FUNC = context.WithCancel(context.Background())
-}
