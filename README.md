@@ -6,6 +6,13 @@ CoCo Captive Portal is a network security application. it's extremely simple, li
 
 Please check the [releases](https://github.com/mrzack99s/coco-captive-portal/releases/) page.
 
+## Features
+
+- Captive Portal (L3)
+- LDAP Integration
+- Radius Integration
+- DDOS Prevention (Basic)
+
 ## Requirements
 
 - NIC: 2 interfaces
@@ -15,13 +22,6 @@ Please check the [releases](https://github.com/mrzack99s/coco-captive-portal/rel
   - Ubuntu: 18.04, 20.04
   - Debian: 10, 11
 - IP Address of an interface and prepare routing table
-
-## Authentication protocol supports
-
-- LDAP
-  - Google LDAP (G-Suite)
-  - Active Directory
-- Radius
 
 ## Getting Started
 
