@@ -21,10 +21,10 @@ func InitializeCaptivePortal() (err error) {
 	}
 
 	// Append Rules
-	err = IPT.AppendUnique("filter", "INPUT", "-p", "icmp", "-j", "DROP")
-	if err != nil {
-		return
-	}
+	// err = IPT.AppendUnique("filter", "INPUT", "-p", "icmp", "-j", "DROP")
+	// if err != nil {
+	// 	return
+	// }
 
 	if config.PROD_MODE {
 		err = IPT.AppendUnique("filter", "INPUT", "-p", "tcp", "--dport", "22", "-d", interfaceIp, "-j", "DROP")
