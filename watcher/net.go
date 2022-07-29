@@ -27,7 +27,7 @@ func NetWatcher(ctx context.Context) {
 					panic(err)
 				}
 
-				if handle, err := pcap.OpenLive(config.Config.SecureInterface, 65536, true, pcap.BlockForever); err != nil {
+				if handle, err := pcap.OpenLive(config.Config.SecureInterface, 1600, true, pcap.BlockForever); err != nil {
 					panic(err)
 				} else if err := handle.SetBPFFilter(fmt.Sprintf("not src %s and not dst %s", intIpv4, intIpv4)); err != nil { // optional
 					panic(err)
