@@ -8,6 +8,7 @@ import (
 var (
 	Config                       types.ConfigType
 	NetLog                       *zerolog.Logger
+	LoginLog                     *zerolog.Logger
 	AppLog                       *zerolog.Logger
 	PROD_MODE                    bool
 	URL_CAPTIVE_PORTAL_DETECTION = []string{

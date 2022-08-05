@@ -28,3 +28,8 @@ type ReplaceWordInFileType struct {
 	NewWord string
 	File    string
 }
+
+type AppendStringToFileType struct {
+	Str  string
+	File string
+}

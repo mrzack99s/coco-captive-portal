@@ -9,6 +9,7 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	"github.com/mrzack99s/coco-captive-portal/config"
+	"github.com/mrzack99s/coco-captive-portal/constants"
 	"github.com/mrzack99s/coco-captive-portal/session"
 	"github.com/mrzack99s/coco-captive-portal/types"
 	"github.com/mrzack99s/coco-captive-portal/utils"
@@ -70,7 +71,22 @@ func NetWatcher(ctx context.Context) {
 							}
 						}
 
-						config.NetLog.Info().Msgf("proto=%s fqdn=%s src=%s,%s dst=%s,%s", proto, fqdn, srcip, sport, dstip, dport)
+						config.NetLog.Info().Msgf("proto=%s src=%s,%s dst=%s,%s", proto, fqdn, srcip, sport, dstip, dport)
+
+						go func(srcip string) {
+							sessionId := ""
+							err := utils.CacheGet(constants.SCHEMA_MAP_IP_TO_SESSION, srcip, &sessionId)
+							if err == nil {
+								session := types.SessionType{}
+								err := utils.CacheGet(constants.SCHEMA_SESSION, sessionId, &session)
+								if err == nil {
+									session.LastSeen = time.Now()
+									utils.CacheSet(
+										constants.SCHEMA_SESSION, sessionId, session,
+									)
+								}
+							}
+						}(srcip)
 
 					}
 				}

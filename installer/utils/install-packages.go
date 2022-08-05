@@ -2,6 +2,7 @@ package installer_utils
 
 import (
 	"os/exec"
+	"time"
 
 	"github.com/rs/zerolog/log"
 )
@@ -28,17 +29,26 @@ func installPackages() (err error) {
 			Command: *exec.Command("gpg", "--yes", "--dearmor", "-o", "/usr/share/keyrings/redis-archive-keyring.gpg", "/tmp/redis-gpg"),
 		})
 
+		log.Info().Msg("sleep 1 second")
+		time.Sleep(1000)
+
 		packages = append(packages, CommandType{
 			Type:    COMMAND_IMPORT_KEY_TYPE,
 			Name:    "import apt list",
 			Command: *exec.Command("echo", "\"deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main\"", ">", "/etc/apt/sources.list.d/redis.list"),
 		})
 
+		log.Info().Msg("sleep 1 second")
+		time.Sleep(1000)
+
 		packages = append(packages, CommandType{
 			Type:    COMMAND_UPDATE_TYPE,
 			Name:    "repo",
 			Command: *exec.Command("apt-get", "update"),
 		})
+
+		log.Info().Msg("sleep 1 second")
+		time.Sleep(1000)
 
 		packages = append(packages, CommandType{
 			Type:    COMMAND_INSTALL_TYPE,

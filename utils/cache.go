@@ -44,6 +44,37 @@ func CacheGet(prefix, key string, v interface{}) (err error) {
 	return
 }
 
+func CachePop(stack string, v interface{}) (err error) {
+	var value string
+	value, err = redisCache.LPop(context.Background(), stack).Result()
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal([]byte(value), v)
+	return
+}
+
+func CachePush(stack string, v interface{}) (err error) {
+	var value []byte
+	if reflect.TypeOf(v).Name() != "string" {
+		value, err = json.Marshal(v)
+		if err != nil {
+			return
+		}
+
+		err = redisCache.LPush(context.Background(), stack, string(value)).Err()
+		if err != nil {
+			return
+		}
+	} else {
+		err = redisCache.LPush(context.Background(), stack, v).Err()
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
 func CacheGetString(prefix, key string) (value string, err error) {
 	value, err = redisCache.Get(context.Background(), fmt.Sprintf("%s:%s", prefix, key)).Result()
 	return

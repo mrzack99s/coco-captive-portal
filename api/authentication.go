@@ -63,7 +63,6 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 	_, err = utils.CacheGetString(constants.SCHEMA_MAP_IP_TO_SESSION, clientIp)
 	if err == nil {
 		msg := fmt.Sprintf("%s signed", clientIp)
-		config.AppLog.Error().Msg(msg)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg": msg,
 		})
@@ -76,7 +75,7 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 
 	if len(arrSid) >= int(config.Config.MaxConcurrentSession) {
 		msg := fmt.Sprintf("user %s reached the limit concurrent session and sign-in via %s", checkCredential.Username, clientIp)
-		config.AppLog.Error().Msg(msg)
+		config.LoginLog.Error().Msg(msg)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"msg": msg,
 		})
@@ -87,21 +86,27 @@ func (ctl *authController) getAuthentication(c *gin.Context) {
 		err := config.Config.LDAP.Authentication(checkCredential.Username, checkCredential.Password)
 		if err != nil {
 			msg := fmt.Sprintf("ldap authentication: user %s login failed, via %s", checkCredential.Username, clientIp)
-			config.AppLog.Error().Msg(msg)
+			config.LoginLog.Error().Msg(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"msg": msg,
 			})
 			return
+		} else {
+			msg := fmt.Sprintf("ldap authentication: user %s login success, via %s", checkCredential.Username, clientIp)
+			config.LoginLog.Info().Msg(msg)
 		}
 	} else if config.Config.Radius != nil {
 		err := config.Config.Radius.Authentication(checkCredential.Username, checkCredential.Password)
 		if err != nil {
 			msg := fmt.Sprintf("radius authentication: user %s login failed, via %s", checkCredential.Username, clientIp)
-			config.AppLog.Error().Msg(msg)
+			config.LoginLog.Error().Msg(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"msg": msg,
 			})
 			return
+		} else {
+			msg := fmt.Sprintf("ldap authentication: user %s login success, via %s", checkCredential.Username, clientIp)
+			config.LoginLog.Info().Msg(msg)
 		}
 	} else {
 		msg := "not have an authentication"

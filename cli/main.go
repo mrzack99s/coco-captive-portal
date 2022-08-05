@@ -23,7 +23,7 @@ import (
 func main() {
 
 	netLogger := config.LoggingConfig{
-		ConsoleLoggingEnabled: true,
+		ConsoleLoggingEnabled: false,
 		FileLoggingEnabled:    true,
 		Directory:             constants.LOG_DIR,
 		Filename:              "netlog",
@@ -34,7 +34,7 @@ func main() {
 	config.NetLog = netLogger.ConfigureWithoutDisplay()
 
 	appLogger := config.LoggingConfig{
-		ConsoleLoggingEnabled: true,
+		ConsoleLoggingEnabled: false,
 		FileLoggingEnabled:    true,
 		Directory:             constants.LOG_DIR,
 		Filename:              "applog",
@@ -43,6 +43,17 @@ func main() {
 		MaxBackups:            90,
 	}
 	config.AppLog = appLogger.Configure()
+
+	loginLogger := config.LoggingConfig{
+		ConsoleLoggingEnabled: false,
+		FileLoggingEnabled:    true,
+		Directory:             constants.LOG_DIR,
+		Filename:              "loginlog",
+		MaxSize:               50,
+		MaxAge:                90,
+		MaxBackups:            90,
+	}
+	config.LoginLog = loginLogger.Configure()
 
 	if !utils.IsRootPrivilege() {
 		panic(`this application needs the ability to run commands as root. We are unable to find either "sudo" or "su" available to make this happen.`)
