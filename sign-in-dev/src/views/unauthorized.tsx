@@ -1,8 +1,4 @@
-import { Chip } from 'primereact/chip'
-import { Button } from 'primereact/button'
-import { useApiConnector } from '../utils/api-connector';
-import { useNavigate } from 'react-router';
-import { useCaptivePortalProperties, useLang, usePageWaiting, useToast } from '../utils/properties';
+import { useCaptivePortalProperties, useLang, usePageWaiting } from '../utils/properties';
 import { useEffect, useState } from 'react';
 
 /* eslint-disable */
