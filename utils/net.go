@@ -85,3 +85,14 @@ func IsIpv4(ip string) bool {
 	re, _ := regexp.Compile(`^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$`)
 	return re.MatchString(ip)
 }
+
+func Ipv4InCidr(cidr, ip string) bool {
+	_, ipnetA, err := net.ParseCIDR(cidr)
+	if err != nil {
+		config.AppLog.Error().Msgf("cannot parse cidr of %s", cidr)
+	}
+
+	ipB := net.ParseIP(ip)
+
+	return ipnetA.Contains(ipB)
+}

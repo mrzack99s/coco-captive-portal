@@ -2,7 +2,7 @@ import Navbar from "../components/navbar";
 import { useEffect, useState } from "react";
 import { useAdminApiConnector } from "../utils/api-connector";
 import { VirtualScroller } from "primereact/virtualscroller";
-import { CONSTANT_FQDN_BLOCKLIST, CONSTANT_BYPASS_NETWORK, CONSTANT_ENDPOINT_ALLOWLIST } from "../components/constants";
+import { CONSTANT_FQDN_BLOCKLIST, CONSTANT_BYPASS_NETWORK, CONSTANT_ENDPOINT_ALLOWLIST, CONSTANT_USEAUTH_NETWORKS } from "../components/constants";
 import { Fieldset } from "primereact/fieldset";
 import { Chip } from "primereact/chip";
 import { TypesConfigType, TypesEndpointType } from "../api";
@@ -15,6 +15,7 @@ import { AddBypassNetwork } from "../components/policy-n-objects/add-bypass-netw
 import { useToast } from "../utils/properties";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Copyright } from "../components/copyright"
+import { AddUseAuthNetwork } from "../components/policy-n-objects/add-useauth-network";
 
 const PolicyNObjectView = () => {
     const [config, setConfig] = useState({} as TypesConfigType)
@@ -30,6 +31,9 @@ const PolicyNObjectView = () => {
     const [dialogBypassNetwork, setDialogBypassNetwork] = useState(false)
     const [dialogFqdnBlocklist, setDialogFqdnBlocklist] = useState(false)
     const [dialogEndpointAllowlist, setDialogEndpointAllowlist] = useState(false)
+    const [filterUseauthNetworks, setFilterUseauthNetworks] = useState("")
+    const [useauthNetworks, setUseauthNetworks] = useState([] as string[])
+    const [dialogUseauthNetworks, setDialogUseauthNetworks] = useState(false)
     const [deleteSelected, setDeleteSelected] = useState("" as string | object)
     const [deleteMode, setDeleteMode] = useState("")
     const toast = useToast();
@@ -48,6 +52,7 @@ const PolicyNObjectView = () => {
                 setEndpointAllowList(res.allow_endpoints!)
                 setFQDNBlockList(res.fqdn_blocklist!)
                 setBypassNetwork(res.bypass_networks!)
+                setUseauthNetworks(res.authorized_networks!)
                 setLoading(false)
             })
     }
@@ -105,6 +110,10 @@ const PolicyNObjectView = () => {
                 index = temp.bypass_networks!.findIndex(e => e === deleteSelected)
                 temp.bypass_networks!.splice(index, 1)
                 break;
+            case CONSTANT_USEAUTH_NETWORKS:
+                index = temp.authorized_networks!.findIndex(e => e === deleteSelected)
+                temp.authorized_networks!.splice(index, 1)
+                break;
         }
 
         apiInstance.api.setConfig(temp)
@@ -142,6 +151,14 @@ const PolicyNObjectView = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterBypassNetwork])
+
+    useEffect(() => {
+        if (filterUseauthNetworks !== "") {
+            filter(filterUseauthNetworks, config.authorized_networks, setUseauthNetworks)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterUseauthNetworks])
+
 
     useEffect(() => {
         if (deleteSelected && deleteMode) {
@@ -182,6 +199,18 @@ const PolicyNObjectView = () => {
                         reject: deleteReject
                     });
                     break;
+                case CONSTANT_USEAUTH_NETWORKS:
+                    confirmDialog({
+                        message: 'Do you want to delete this network address?',
+                        header: 'Delete Confirmation',
+                        icon: 'pi pi-info-circle',
+                        acceptClassName: 'p-button-danger',
+                        closable: false,
+                        draggable: false,
+                        accept: deleteAccept,
+                        reject: deleteReject
+                    });
+                    break;
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -203,6 +232,10 @@ const PolicyNObjectView = () => {
                 setFilterBypassNetwork("")
                 setBypassNetwork(config.bypass_networks!)
                 break;
+            case CONSTANT_USEAUTH_NETWORKS:
+                setFilterUseauthNetworks("")
+                setUseauthNetworks(config.authorized_networks!)
+                break;
         }
 
     }
@@ -219,6 +252,9 @@ const PolicyNObjectView = () => {
             <AddBypassNetwork refresh={() => {
                 setRefresh(!refresh)
             }} visible={dialogBypassNetwork} setVisible={setDialogBypassNetwork} />
+            <AddUseAuthNetwork refresh={() => {
+                setRefresh(!refresh)
+            }} visible={dialogUseauthNetworks} setVisible={setDialogUseauthNetworks} />
 
             <div className="grid grid-nogutter m-0" style={{ position: "relative", top: "65px" }}>
                 <div className="col hidden lg:inline grid-nogutter"></div>
@@ -230,6 +266,76 @@ const PolicyNObjectView = () => {
                     <div className="grid nested-grid mt-3 h-36rem px-2 mb-3">
                         <div className="col-12 lg:col-5 lg:inline p-0">
                             <Fieldset legend="Ingress" className="custom-fieldset-p0 border-1 border-gray-50 border-round-2xl h-full">
+                                <div className="p-2 font-medium text-xs text-gray-500">
+                                    {"Networks to use for authentication".toUpperCase()}
+                                </div>
+                                <div className="grid p-2 font-medium text-xs text-gray-500">
+                                    <div className="col-2 lg:col-1 p-0 my-auto mx-auto">
+                                        <Button tooltip="Add network to bypass a captive portal"
+                                            tooltipOptions={{ mouseTrack: true }}
+                                            icon="pi pi-plus-circle"
+                                            className="p-button-primary w-full py-2"
+                                            onClick={() => setDialogUseauthNetworks(true)} />
+                                    </div>
+                                    <div className="col-2 lg:col-1 p-0 my-auto mx-auto pl-1">
+                                        <Button tooltip="Filter cleanup"
+                                            tooltipOptions={{ mouseTrack: true }}
+                                            icon="pi pi-filter-slash"
+                                            className="p-button-secondary w-full py-2"
+                                            onClick={() => clearFilter(CONSTANT_USEAUTH_NETWORKS)} />
+                                    </div>
+                                    <div className="col-8 lg:col-10 p-0 my-auto mx-auto">
+                                        <InputText className="w-full" value={filterUseauthNetworks} onChange={(e) => { setFilterUseauthNetworks(e.target.value) }} placeholder="Keyword Search" />
+                                    </div>
+                                </div>
+                                <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
+                                    {(useauthNetworks && useauthNetworks.length > 0) &&
+                                        <VirtualScroller
+                                            loading={loading}
+                                            className="h-18rem"
+                                            items={useauthNetworks}
+                                            itemSize={50} itemTemplate={(item) => (
+                                                <div className="grid m-0 border-bottom-1 border-gray-50 py-1">
+                                                    <div className="col-10 p-0 lg:p-1">
+                                                        <Chip label={item} />
+                                                    </div>
+                                                    <div className="col-2 p-0 m-auto text-right">
+                                                        <Tooltip target=".tooltip-tracking" mouseTrack mouseTrackLeft={10} />
+                                                        <span
+                                                            onClick={() => {
+                                                                setDeleteSelected(item)
+                                                                setDeleteMode(CONSTANT_USEAUTH_NETWORKS)
+                                                                confirmDialog({
+                                                                    message: 'Do you want to delete this network address?',
+                                                                    header: 'Delete Confirmation',
+                                                                    icon: 'pi pi-info-circle',
+                                                                    acceptClassName: 'p-button-danger',
+                                                                    closable: false,
+                                                                    draggable: false,
+                                                                    accept: deleteAccept,
+                                                                    reject: deleteReject
+                                                                });
+                                                            }}
+                                                            className='text-sm text-red-500 hover:bg-red-500 hover:text-white transition-duration-500 cursor-pointer border-1 p-1 tooltip-tracking'
+                                                            data-pr-tooltip="Delete"
+                                                        >
+                                                            <i className="pi pi-trash text-sm"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            showLoader delay={250} />
+                                    }
+                                    {(!useauthNetworks || useauthNetworks.length === 0) &&
+                                        <div className="flex align-items-center justify-content-center h-18rem">
+                                            Not found network
+                                        </div>
+                                    }
+
+                                </div>
+
+                                {/* Next Modules */}
+
                                 <div className="p-2 font-medium text-xs text-gray-500">
                                     {"Bypass Captive Portal".toUpperCase()}
                                 </div>
@@ -253,7 +359,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {bypassNetwork &&
+                                    {(bypassNetwork && bypassNetwork.length > 0) &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -290,13 +396,14 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {!bypassNetwork &&
+                                    {(!bypassNetwork || bypassNetwork.length === 0) &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found network
                                         </div>
                                     }
 
                                 </div>
+
                             </Fieldset>
                         </div>
                         <div className="col-12 hidden lg:col-2 lg:flex align-items-center justify-content-center">
@@ -330,7 +437,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {endpointAllowList &&
+                                    {(endpointAllowList && endpointAllowList.length > 0) &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -374,7 +481,7 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {!endpointAllowList &&
+                                    {(!endpointAllowList || endpointAllowList.length === 0) &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>
@@ -400,7 +507,7 @@ const PolicyNObjectView = () => {
                                     </div>
                                 </div>
                                 <div className="p-2 font-medium text-xs text-gray-500 border-1 border-gray-50">
-                                    {fqdnBlockList &&
+                                    {(fqdnBlockList && fqdnBlockList.length > 0) &&
                                         <VirtualScroller
                                             loading={loading}
                                             className="h-18rem"
@@ -437,7 +544,7 @@ const PolicyNObjectView = () => {
                                             )}
                                             showLoader delay={250} />
                                     }
-                                    {!fqdnBlockList &&
+                                    {(!fqdnBlockList || fqdnBlockList.length === 0) &&
                                         <div className="flex align-items-center justify-content-center h-18rem">
                                             Not found endpoint
                                         </div>

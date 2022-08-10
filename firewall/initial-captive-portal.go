@@ -77,7 +77,7 @@ func initFQDNBlocklist() (err error) {
 }
 
 func bypassNetworks() (err error) {
-	for _, snet := range config.Config.BypassNetworks {
+	for _, snet := range config.Config.BypassedNetworks {
 		err = AllowAccessBypass(&types.SessionType{
 			IPAddress: snet,
 		})

@@ -62,7 +62,7 @@ func (ctl *operatorController) setConfig(c *gin.Context) {
 
 	tempAllowEndpoint := config.Config.AllowEndpoints
 	tempFQDNBlocklist := config.Config.FQDNBlocklist
-	tempBypassNetworks := config.Config.BypassNetworks
+	tempBypassNetworks := config.Config.BypassedNetworks
 
 	if len(tempAllowEndpoint) > len(configs.AllowEndpoints) {
 		diffArray := []types.EndpointType{}
@@ -148,11 +148,11 @@ func (ctl *operatorController) setConfig(c *gin.Context) {
 		}
 	}
 
-	if len(tempBypassNetworks) > len(configs.BypassNetworks) {
+	if len(tempBypassNetworks) > len(configs.BypassedNetworks) {
 		diffArray := []string{}
 		for _, e1 := range tempBypassNetworks {
 			foundDiff := true
-			for _, e2 := range configs.BypassNetworks {
+			for _, e2 := range configs.BypassedNetworks {
 				if e1 == e2 {
 					foundDiff = false
 					break
@@ -176,7 +176,7 @@ func (ctl *operatorController) setConfig(c *gin.Context) {
 	} else {
 
 		diffArray := []string{}
-		for _, e1 := range configs.BypassNetworks {
+		for _, e1 := range configs.BypassedNetworks {
 			foundDiff := true
 			for _, e2 := range tempBypassNetworks {
 				if e1 == e2 {

@@ -228,7 +228,7 @@ func (ctl *operatorController) checkIsAdministrator(c *gin.Context) {
 		return
 	}
 
-	if ss.Username == config.Config.Administrator.Username && utils.Sha512encode(ss.Password) == config.Config.Administrator.Password {
+	if ss.Username == config.Config.Administrator.Credential.Username && utils.Sha512encode(ss.Password) == config.Config.Administrator.Credential.Password {
 		newToken := utils.SecretGenerator(64)
 		err := utils.CacheSetWithTimeDuration("temp", "admtoken", newToken, time.Hour*1)
 		if err != nil {

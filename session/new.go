@@ -19,6 +19,10 @@ func NewSession(session *types.SessionType) (err error) {
 		return
 	}
 
+	if utils.CacheFindExistingKey(constants.SCHEMA_MAP_IP_TO_OUT_SESSION, session.IPAddress) {
+		utils.CacheDelete(constants.SCHEMA_MAP_IP_TO_OUT_SESSION, session.IPAddress)
+	}
+
 	err = utils.CacheSet(constants.SCHEMA_SESSION, sessionUUID, *session)
 	if err != nil {
 		return

@@ -1,6 +1,8 @@
 package session
 
 import (
+	"time"
+
 	"github.com/mrzack99s/coco-captive-portal/constants"
 	"github.com/mrzack99s/coco-captive-portal/firewall"
 	"github.com/mrzack99s/coco-captive-portal/types"
@@ -16,6 +18,11 @@ func CutOffSession(sessionUUID string) (err error) {
 	}
 
 	err = firewall.UnallowAccess(&ss)
+	if err != nil {
+		return
+	}
+
+	err = utils.CacheSetWithTimeDuration(constants.SCHEMA_MAP_IP_TO_OUT_SESSION, ss.IPAddress, ss.SessionUUID, time.Hour*1)
 	if err != nil {
 		return
 	}

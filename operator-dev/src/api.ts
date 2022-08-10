@@ -45,8 +45,9 @@ export interface TypesCheckCredentialType {
 }
 
 export interface TypesConfigType {
-  administrator?: TypesCredentialType;
+  administrator?: { authorized_networks?: string[]; credential?: TypesCredentialType };
   allow_endpoints?: TypesEndpointType[];
+  authorized_networks?: string[];
   bypass_networks?: string[];
   ddos_prevention?: boolean;
   domain_names?: { auth_domain_name?: string; operator_domain_name?: string };
@@ -73,8 +74,9 @@ export interface TypesEndpointType {
 }
 
 export interface TypesExtendConfigType {
-  administrator?: TypesCredentialType;
+  administrator?: { authorized_networks?: string[]; credential?: TypesCredentialType };
   allow_endpoints?: TypesEndpointType[];
+  authorized_networks?: string[];
   bypass_networks?: string[];
   ddos_prevention?: boolean;
   domain_names?: { auth_domain_name?: string; operator_domain_name?: string };

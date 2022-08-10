@@ -86,19 +86,27 @@ func finally() (err error) {
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_generic_timeout=60",
+			Str:  fmt.Sprintf("net.netfilter.nf_conntrack_buckets=%d", ((si.Memory.Size*1048576)/16384/2)/4),
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_icmp_timeout=10",
+			Str:  "net.netfilter.nf_conntrack_generic_timeout=300",
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_tcp_timeout_established=1800",
+			Str:  "net.netfilter.nf_conntrack_icmp_timeout=15",
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_tcp_timeout_close_wait = 20",
+			Str:  "net.netfilter.nf_conntrack_tcp_timeout_established=86400",
+			File: "/etc/sysctl.conf",
+		},
+		{
+			Str:  "net.netfilter.nf_conntrack_tcp_timeout_close = 10",
+			File: "/etc/sysctl.conf",
+		},
+		{
+			Str:  "net.netfilter.nf_conntrack_tcp_timeout_close_wait = 30",
 			File: "/etc/sysctl.conf",
 		},
 		{
@@ -114,12 +122,16 @@ func finally() (err error) {
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60",
+			Str:  "net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30",
 			File: "/etc/sysctl.conf",
 		},
 		{
-			Str:  "net.netfilter.nf_conntrack_udp_timeout_stream = 60",
+			Str:  "net.netfilter.nf_conntrack_udp_timeout_stream = 30",
 			File: "/etc/sysctl.conf",
+		},
+		{
+			Str:  "nf_conntrack",
+			File: "/etc/modules",
 		},
 	}
 	for _, hh := range networkHardening {

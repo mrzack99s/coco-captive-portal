@@ -44,6 +44,8 @@ func main() {
 	}
 
 	cmdUp.Flags().BoolVar(&installer_utils.IGNORE_VERIFY, "ignore", false, "Ignore some resource verify")
+	cmdUp.Flags().StringVarP(&installer_utils.IMPORT_FILE_PATH, "import", "f", "", "Import config file")
+
 	cmdPurge.Flags().BoolVar(&installer_utils.IGNORE_VERIFY, "force", false, "Force uninstall")
 
 	var rootCmd = &cobra.Command{Use: "coco-installer"}

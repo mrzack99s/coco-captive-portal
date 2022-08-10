@@ -102,6 +102,13 @@ func authRuntime(flag ...bool) {
 		corsConfig.AllowAllOrigins = false
 
 		router.Use(cors.New(corsConfig))
+
+		if config.Config.DomainNames.AuthDomainName != "" {
+			router.Use(api.GetUnAuthirizedNetworkMiddleware(config.Config.DomainNames.AuthDomainName, false))
+		} else {
+			router.Use(api.GetUnAuthirizedNetworkMiddleware(interfaceIp, false))
+		}
+
 		apiEndpoint := router.Group("/api")
 		api.NewAuthController(apiEndpoint)
 
@@ -113,6 +120,8 @@ func authRuntime(flag ...bool) {
 
 	} else {
 		router.Use(cors.New(corsConfig))
+		router.Use(api.GetUnAuthirizedNetworkMiddleware(interfaceIp, false))
+
 		apiEndpoint := router.Group("/api")
 		api.NewAuthController(apiEndpoint)
 		err := router.RunTLS(":443", "./certs/authfullchain.pem", "./certs/authprivkey.pem")
@@ -132,7 +141,7 @@ func operatorRuntime(flag ...bool) {
 		c.Redirect(http.StatusFound, "/docs/index.html")
 	})
 
-	if config.Config.Administrator.Username != "" && config.Config.Administrator.Password != "" {
+	if config.Config.Administrator.Credential.Username != "" && config.Config.Administrator.Credential.Password != "" {
 		router.Use(static.Serve("/", static.LocalFile(constants.APP_DIR+"/dist-operator-ui", true)))
 		router.NoRoute(func(c *gin.Context) {
 			c.File(constants.APP_DIR + "/dist-operator-ui/index.html")
@@ -164,8 +173,14 @@ func operatorRuntime(flag ...bool) {
 		}
 
 		corsConfig.AllowAllOrigins = false
-
 		router.Use(cors.New(corsConfig))
+
+		if config.Config.DomainNames.OperatorDomainName != "" {
+			router.Use(api.GetUnAuthirizedNetworkMiddleware(config.Config.DomainNames.OperatorDomainName, true))
+		} else {
+			router.Use(api.GetUnAuthirizedNetworkMiddleware(interfaceIp, true))
+		}
+
 		apiEndpoint := router.Group("/api")
 		api.NewOperatorController(apiEndpoint)
 		err := router.RunTLS(fmt.Sprintf("%s:443", interfaceIp), constants.APP_DIR+"/certs/operatorfullchain.pem", constants.APP_DIR+"/certs/operatorprivkey.pem")
@@ -175,6 +190,8 @@ func operatorRuntime(flag ...bool) {
 		}
 	} else {
 		router.Use(cors.New(corsConfig))
+		router.Use(api.GetUnAuthirizedNetworkMiddleware(interfaceIp, true))
+
 		apiEndpoint := router.Group("/api")
 		api.NewOperatorController(apiEndpoint)
 		err := router.RunTLS(":4443", "./certs/operatorfullchain.pem", "./certs/operatorprivkey.pem")

@@ -44,8 +44,13 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                 setIssue(res.issue!)
                 navigate("/keepalive")
             })
-            .catch(() => {
-                navigate("/sign-in")
+            .catch((e) => {
+                if ((e.error.msg as string).trim() === "your network is not authorized") {
+                    navigate("/unauthorized")
+                }
+                else {
+                    navigate("/sign-in")
+                }
             })
     }
 
@@ -65,16 +70,18 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
 
     useEffect(() => {
         getHtmlProps()
-        checkCredential()
-        if (location.pathname.includes("/sign-in")) {
-            apiInstance.api.initialize()
-                .then(res => res.data)
-                .then(res => {
-                    setInitSecret(res.secret!)
-                    if (!defaultLangSet) {
-                        navigate("/sign-in")
-                    }
-                })
+        if (!location.pathname.includes("/unauthorized")) {
+            checkCredential()
+            if (location.pathname.includes("/sign-in")) {
+                apiInstance.api.initialize()
+                    .then(res => res.data)
+                    .then(res => {
+                        setInitSecret(res.secret!)
+                        if (!defaultLangSet) {
+                            navigate("/sign-in")
+                        }
+                    })
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
@@ -101,24 +108,27 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                 </div>
             }
 
+            {!location.pathname.includes("/unauthorized") &&
+                <>
+                    <span className="p-buttonset" style={{
+                        position: "absolute",
+                        top: "30px",
+                        right: "3%"
+                    }}>
+                        <Button label="English"
+                            onClick={() => {
+                                setLang('en')
+                            }}
+                            className={`p-button-xs pt-1 px-3 text-sm ${lang !== "en" ? "p-button-outlined" : ""}`} />
+                        <Button label="ภาษาไทย"
+                            onClick={() => {
+                                setLang('th')
+                            }}
+                            className={`p-button-xs pt-1 px-3 text-sm ${lang !== "th" ? "p-button-outlined" : ""}`} />
+                    </span>
+                </>
+            }
 
-
-            <span className="p-buttonset" style={{
-                position: "absolute",
-                top: "30px",
-                right: "3%"
-            }}>
-                <Button label="English"
-                    onClick={() => {
-                        setLang('en')
-                    }}
-                    className={`p-button-xs pt-1 px-3 text-sm ${lang !== "en" ? "p-button-outlined" : ""}`} />
-                <Button label="ภาษาไทย"
-                    onClick={() => {
-                        setLang('th')
-                    }}
-                    className={`p-button-xs pt-1 px-3 text-sm ${lang !== "th" ? "p-button-outlined" : ""}`} />
-            </span>
 
 
             {children}

@@ -25,9 +25,6 @@ linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BINARY}-installer ./installer/cli.go ;
 	-chmod +x ${BINARY}-installer;
 build-node:
-	cd sign-in-dev;
-	yarn build;
-	mv build ../dist-auth-ui
-	cd ../operator-dev;
-	yarn build;
-	mv build ../dist-operator-ui
+	rm -rf dist-auth-ui && rm -rf dist-operator-ui
+	cd sign-in-dev && yarn build && mv build ../dist-auth-ui
+	cd operator-dev && yarn build && mv build ../dist-operator-ui

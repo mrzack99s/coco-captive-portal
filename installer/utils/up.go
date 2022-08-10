@@ -16,9 +16,24 @@ func UpInstaller() {
 		os.Exit(0)
 	}
 
-	if err := defineConfig(); err != nil {
-		log.Error().Msg("define configure failed")
-		os.Exit(0)
+	if IMPORT_FILE_PATH != "" {
+		if err := defineConfig(); err != nil {
+			log.Error().Msg("define configure failed")
+			os.Exit(0)
+		}
+	} else {
+		if e := copy(CopyType{
+			Src:  IMPORT_FILE_PATH,
+			Dst:  fmt.Sprintf("%s/config.yaml", APP_DIR),
+			Perm: 0644,
+		}); e != nil {
+			if IGNORE_VERIFY {
+				log.Warn().Msg("import config file failed")
+			} else {
+				log.Warn().Msg("import config file failed")
+				os.Exit(0)
+			}
+		}
 	}
 
 	fmt.Print("\n### Installation\n\n")

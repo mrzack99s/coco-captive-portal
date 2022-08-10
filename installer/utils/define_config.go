@@ -24,14 +24,14 @@ func defineConfig() (err error) {
 
 	config := types.ConfigType{}
 	fmt.Print("### Common Config\n\n")
-	config.EgressInterface = scan("Egress interface name (WAN): ")
-	config.SecureInterface = scan("Secure interface name (LAN): ")
+	config.EgressInterface = scan("Egress interface name (WAN, ex. eth0): ")
+	config.SecureInterface = scan("Secure interface name (LAN, ex. eth1): ")
 	config.SessionIdle = scanUint64("Session idle (Minutes): ")
 	config.MaxConcurrentSession = scanUint64("Max concurrent session (Devices): ")
-	authCertFileName := scan("Captive portal certificate file location: ")
-	authKeyFileName := scan("Captive portal key of certificate file location: ")
-	operatorCertFileName := scan("Operator certificate file location: ")
-	operatorKeyFileName := scan("Operator key of certificate file location: ")
+	authCertFileName := scan("Captive portal certificate file location (ex. /home/coco/cert.pem): ")
+	authKeyFileName := scan("Captive portal key of certificate file location (ex. /home/coco/key.pem): ")
+	operatorCertFileName := scan("Operator certificate file location (ex. /home/coco/cert.pem): ")
+	operatorKeyFileName := scan("Operator key of certificate file location (ex. /home/coco/key.pem): ")
 
 	dstAuthCertFileName := constants.APP_DIR + "/certs/authfullchain.pem"
 	dstAuthKeyFileName := constants.APP_DIR + "/certs/authprivkey.pem"
@@ -96,8 +96,8 @@ func defineConfig() (err error) {
 	}
 
 	if confirmWithMsg("Are you need to custom domain of captive portal and operator?") {
-		config.DomainNames.AuthDomainName = scan("Captive portal domain name: ")
-		config.DomainNames.OperatorDomainName = scan("Operator domain name: ")
+		config.DomainNames.AuthDomainName = scan("Captive portal domain name (ex. coco-cative-portal.local): ")
+		config.DomainNames.OperatorDomainName = scan("Operator domain name (ex. coco-cative-portal.local): ")
 	}
 
 	mode := ""
@@ -107,7 +107,7 @@ func defineConfig() (err error) {
 
 	if mode == "ldap" {
 		config.LDAP = &authentication.LDAPEndpointType{}
-		config.LDAP.Hostname = scan("[LDAP] Hostname: ")
+		config.LDAP.Hostname = scan("[LDAP] Hostname (ex. coco-cative-portal.local, 172.16.0.254): ")
 		config.LDAP.Port = scanUint64("[LDAP] Port: ")
 		config.LDAP.TLSEnable = confirmWithMsg("Enable TLS?")
 		if config.LDAP.TLSEnable {
@@ -150,16 +150,20 @@ func defineConfig() (err error) {
 
 		config.LDAP.SingleDomain = confirmWithMsg("Single domain?")
 		if !config.LDAP.SingleDomain {
-			config.LDAP.DomainNames = scanArray("Enter a domain name: ")
+			config.LDAP.DomainNames = scanArray("Enter a domain name (ex. coco-cative-portal.local): ")
 		} else {
-			domain := scan("Enter a domain name: ")
+			domain := scan("Enter a domain name (ex. coco-cative-portal.local): ")
 			config.LDAP.DomainNames = append(config.LDAP.DomainNames, domain)
 		}
 	} else if mode == "radius" {
 		config.Radius = &authentication.RadiusEndpointType{}
-		config.Radius.Hostname = scan("[RADIUS] Hostname: ")
+		config.Radius.Hostname = scan("[RADIUS] Hostname (ex. coco-cative-portal.local, 172.16.0.254): ")
 		config.Radius.Port = scanUint64("[RADIUS] Port: ")
 		config.Radius.Secret = scan("[RADIUS] Secret: ")
+	}
+
+	if !confirmWithMsg("Authorized access from any network?") {
+		config.AuthorizedNetworks = scanArray("Enter a network cidr (ex. 10.0.0.0/24): ")
 	}
 
 	clearTerminal()
@@ -184,16 +188,23 @@ func defineConfig() (err error) {
 	}
 
 	clearTerminal()
-	config.Administrator = types.CredentialType{}
+	config.Administrator.Credential = types.CredentialType{}
 	fmt.Print("### Administrator Config\n\n")
-	config.Administrator.Username = scan("Administrator username: ")
+	config.Administrator.Credential.Username = scan("Administrator username: ")
 	fmt.Print("Administrator password: ")
 	password, _ := terminal.ReadPassword(0)
-	config.Administrator.Password = utils.Sha512encode(string(password))
+	config.Administrator.Credential.Password = utils.Sha512encode(string(password))
+
+	if !confirmWithMsg("Authorized access an operator from any network?") {
+		config.Administrator.AuthorizedNetworks = scanArray("Enter a network cidr (ex. 10.0.0.0/24): ")
+	}
 
 	clearTerminal()
 	fmt.Print("### System Config\n\n")
 	config.DDOSPrevention = confirmWithMsg("Enable DDOS prevention?")
+
+	config.AuthorizedNetworks = append(config.AuthorizedNetworks, "0.0.0.0/0")
+	config.Administrator.AuthorizedNetworks = append(config.Administrator.AuthorizedNetworks, "0.0.0.0/0")
 
 	dByte, err := yaml.Marshal(config)
 	if err != nil {
@@ -250,6 +261,7 @@ func scanUint64(words string) uint64 {
 }
 
 func scanArray(words string) []string {
+	fmt.Print("### Enter 'end' to exit adding a message\n")
 	dataInput := ""
 	dataInputArray := []string{}
 	for dataInput != "end" || dataInput == "" {

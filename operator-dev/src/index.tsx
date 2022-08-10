@@ -20,6 +20,7 @@ import Overview from './views/overview';
 import ViewConfig from './views/config';
 import PolicyNObjects from './views/policy-n-objects';
 import SessionMonitor from './views/session-monitor';
+import UnAuthorized from './views/unauthorized';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -36,6 +37,7 @@ root.render(
             <Route path="/session-monitor" element={<SessionMonitor />} />
             <Route path="/config" element={<ViewConfig />} />
             <Route path="/policy-and-objects" element={<PolicyNObjects />} />
+            <Route path="/unauthorized" element={<UnAuthorized />} />
           </Routes>
         </AppPropertiesProvider>
       </BrowserRouter>

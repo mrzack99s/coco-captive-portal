@@ -18,6 +18,7 @@ import AppPropertiesProvider from './utils/properties';
 import ApiProvider from './utils/api-connector';
 import { CookiesProvider } from 'react-cookie';
 import KeepAlive from './views/keepalive';
+import UnAuthorized from './views/unauthorized';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -32,6 +33,7 @@ root.render(
             <Route path='*' element={<Navigate to="/sign-in" replace />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/keepalive" element={<KeepAlive />} />
+            <Route path="/unauthorized" element={<UnAuthorized />} />
           </Routes>
         </AppPropertiesProvider>
       </BrowserRouter>

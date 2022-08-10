@@ -149,14 +149,14 @@ const SignIn = () => {
                                         <>
                                             {captivePortalProperties.html!.en_title_name
                                                 ? captivePortalProperties.html!.en_title_name
-                                                : "Captive Portal"}
+                                                : "CoCo Captive Portal"}
                                         </>
                                     )}
                                     {lang === "th" && (
                                         <>
                                             {captivePortalProperties.html!.th_title_name
                                                 ? captivePortalProperties.html!.th_title_name
-                                                : "Captive Portal"}
+                                                : "CoCo Captive Portal"}
                                         </>
                                     )}
                                 </span>

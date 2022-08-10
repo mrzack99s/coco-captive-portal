@@ -62,10 +62,21 @@ definitions:
   types.ConfigType:
     properties:
       administrator:
-        $ref: '#/definitions/types.CredentialType'
+        properties:
+          authorized_networks:
+            items:
+              type: string
+            type: array
+          credential:
+            $ref: '#/definitions/types.CredentialType'
+        type: object
       allow_endpoints:
         items:
           $ref: '#/definitions/types.EndpointType'
+        type: array
+      authorized_networks:
+        items:
+          type: string
         type: array
       bypass_networks:
         items:
@@ -120,10 +131,21 @@ definitions:
   types.ExtendConfigType:
     properties:
       administrator:
-        $ref: '#/definitions/types.CredentialType'
+        properties:
+          authorized_networks:
+            items:
+              type: string
+            type: array
+          credential:
+            $ref: '#/definitions/types.CredentialType'
+        type: object
       allow_endpoints:
         items:
           $ref: '#/definitions/types.EndpointType'
+        type: array
+      authorized_networks:
+        items:
+          type: string
         type: array
       bypass_networks:
         items:

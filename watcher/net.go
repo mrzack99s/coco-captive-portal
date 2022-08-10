@@ -77,14 +77,25 @@ func NetWatcher(ctx context.Context) {
 							sessionId := ""
 							err := utils.CacheGet(constants.SCHEMA_MAP_IP_TO_SESSION, srcip, &sessionId)
 							if err == nil {
+								if !utils.CacheFindExistingKey(constants.SCHEMA_MAP_IP_TO_OUT_SESSION, srcip) {
+									session := types.SessionType{}
+									err := utils.CacheGet(constants.SCHEMA_SESSION, sessionId, &session)
+									if err == nil {
+										session.LastSeen = time.Now()
+										utils.CacheSet(
+											constants.SCHEMA_SESSION, sessionId, session,
+										)
+									}
+								}
+							} else {
 								session := types.SessionType{}
 								err := utils.CacheGet(constants.SCHEMA_SESSION, sessionId, &session)
 								if err == nil {
-									session.LastSeen = time.Now()
-									utils.CacheSet(
-										constants.SCHEMA_SESSION, sessionId, session,
-									)
+									utils.CacheDelete(constants.SCHEMA_SESSION, session.SessionUUID)
+									utils.CacheDelete(constants.SCHEMA_MAP_IP_TO_SESSION, session.IPAddress)
+									utils.CacheDelete(constants.SCHEMA_MAP_ISSUE_TO_SESSION, session.Issue)
 								}
+
 							}
 						}(srcip)
 

@@ -1,9 +1,12 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mrzack99s/coco-captive-portal/config"
 	"github.com/mrzack99s/coco-captive-portal/constants"
 	"github.com/mrzack99s/coco-captive-portal/utils"
 )
@@ -34,7 +37,6 @@ func NewOperatorController(router gin.IRouter) *operatorController {
 
 func tokenMiddleware(c *gin.Context) {
 	tokenString := c.Request.Header.Get("api-token")
-
 	token, _ := utils.CacheGetString(constants.SCHEMA_CONFIG, "api-token")
 	if tokenString != token {
 		token, err := utils.CacheGetString("temp", "admtoken")
@@ -44,9 +46,47 @@ func tokenMiddleware(c *gin.Context) {
 			return
 		}
 	}
-
 	c.Next()
+}
+func GetUnAuthirizedNetworkMiddleware(domain string, operator bool) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		path := c.Request.URL.Path
+		if path == "/unauthorized" || path == "/api/get-captive-portal-config-fundamental" {
+			c.Next()
+			return
+		}
 
+		clientIp := c.ClientIP()
+
+		if operator {
+			for _, cidr := range config.Config.Administrator.AuthorizedNetworks {
+				if utils.Ipv4InCidr(cidr, clientIp) {
+					c.Next()
+					return
+				}
+			}
+
+		} else {
+			for _, cidr := range config.Config.AuthorizedNetworks {
+				if utils.Ipv4InCidr(cidr, clientIp) {
+					c.Next()
+					return
+				}
+			}
+
+		}
+
+		if strings.Contains(path, "/api") {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"msg": "your network is not authorized",
+			})
+			c.Abort()
+			return
+		}
+
+		c.Redirect(http.StatusFound, fmt.Sprintf("https://%s/unauthorized", domain))
+		c.Abort()
+	}
 }
 
 func (ctl *authController) register() {
@@ -59,7 +99,6 @@ func (ctl *authController) register() {
 }
 
 func (ctl *operatorController) register() {
-
 	ctl.router.PUT("/kick-username", tokenMiddleware, ctl.kickSessionViaUsername)
 	ctl.router.PUT("/kick-ip-address", tokenMiddleware, ctl.kickSessionViaIPAddress)
 	ctl.router.PUT("/config", tokenMiddleware, ctl.setConfig)

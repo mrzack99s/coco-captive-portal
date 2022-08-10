@@ -847,12 +847,29 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "administrator": {
-                    "$ref": "#/definitions/types.CredentialType"
+                    "type": "object",
+                    "properties": {
+                        "authorized_networks": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "credential": {
+                            "$ref": "#/definitions/types.CredentialType"
+                        }
+                    }
                 },
                 "allow_endpoints": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/types.EndpointType"
+                    }
+                },
+                "authorized_networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 },
                 "bypass_networks": {
@@ -936,12 +953,29 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "administrator": {
-                    "$ref": "#/definitions/types.CredentialType"
+                    "type": "object",
+                    "properties": {
+                        "authorized_networks": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "credential": {
+                            "$ref": "#/definitions/types.CredentialType"
+                        }
+                    }
                 },
                 "allow_endpoints": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/types.EndpointType"
+                    }
+                },
+                "authorized_networks": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 },
                 "bypass_networks": {

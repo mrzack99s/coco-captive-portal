@@ -47,14 +47,24 @@ const AppPropertiesProvider: React.FC<AppProperties> = ({ children }) => {
                     navigate("/overview")
                 }
             })
-            .catch(() => {
-                removeCookies("api-token")
-                navigate("/sign-in")
+            .catch((err) => {
+                if ((err.error.msg as string).trim() === "your network is not authorized") {
+                    removeCookies("api-token")
+                    navigate("/unauthorized")
+                }
+                else {
+                    removeCookies("api-token")
+                    navigate("/sign-in")
+                }
             })
     }
 
+
     useEffect(() => {
-        checkCredential(location.pathname)
+
+        if (!location.pathname.includes("/unauthorized")) {
+            checkCredential(location.pathname)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 

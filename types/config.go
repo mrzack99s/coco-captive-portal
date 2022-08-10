@@ -8,14 +8,18 @@ type ConfigType struct {
 	SecureInterface      string                             `yaml:"secure_interface" json:"secure_interface"`
 	SessionIdle          uint64                             `yaml:"session_idle" json:"session_idle"`
 	MaxConcurrentSession uint64                             `yaml:"max_concurrent_session" json:"max_concurrent_session"`
-	BypassNetworks       []string                           `yaml:"bypass_networks" json:"bypass_networks"`
+	AuthorizedNetworks   []string                           `yaml:"authorized_networks" json:"authorized_networks"`
+	BypassedNetworks     []string                           `yaml:"bypassed_networks" json:"bypass_networks"`
 	AllowEndpoints       []EndpointType                     `yaml:"allow_endpoints" json:"allow_endpoints"`
 	RedirectURL          string                             `yaml:"redirect_url" json:"redirect_url"`
 	Radius               *authentication.RadiusEndpointType `yaml:"radius" json:"radius"`
 	LDAP                 *authentication.LDAPEndpointType   `yaml:"ldap" json:"ldap"`
 	HTML                 HTMLType                           `yaml:"html" json:"html"`
-	Administrator        CredentialType                     `yaml:"administrator" json:"administrator"`
-	DomainNames          struct {
+	Administrator        struct {
+		Credential         CredentialType `yaml:"credential" json:"credential"`
+		AuthorizedNetworks []string       `yaml:"authorized_networks" json:"authorized_networks"`
+	} `yaml:"administrator" json:"administrator"`
+	DomainNames struct {
 		OperatorDomainName string `yaml:"operator_domain_name" json:"operator_domain_name"`
 		AuthDomainName     string `yaml:"auth_domain_name" json:"auth_domain_name"`
 	} `yaml:"domain_names" json:"domain_names"`

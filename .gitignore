@@ -25,3 +25,9 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+coco
+coco-installer
+
+/dist-auth-ui
+/dist-operator-ui

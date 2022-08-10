@@ -18,9 +18,10 @@ func RedisCache() *redis.Client {
 
 func SetupCache() {
 	redisCache = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "",
-		DB:       0,
+		Addr:               "127.0.0.1:6379",
+		Password:           "",
+		DB:                 0,
+		IdleCheckFrequency: time.Second * 29,
 	})
 }
 
