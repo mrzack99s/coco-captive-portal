@@ -50,37 +50,17 @@ func finally() (err error) {
 		}
 	}
 
-	enableForward := ReplaceWordInFileType{
-		OldWord: "#net.ipv4.ip_forward=1",
-		NewWord: "net.ipv4.ip_forward=1",
-		File:    "/etc/sysctl.conf",
-	}
-	if e := ReplaceInFile(enableForward); e != nil {
-		if IGNORE_VERIFY {
-			log.Warn().Msg("replace was failed")
-		} else {
-			log.Error().Msg("replace was failed")
-			err = e
-			return
-		}
-	}
-
-	disableIpv6 := ReplaceWordInFileType{
-		OldWord: "#net.ipv6.conf.all.disable_ipv6=1",
-		NewWord: "net.ipv6.conf.all.disable_ipv6=1",
-		File:    "/etc/sysctl.conf",
-	}
-	if e := ReplaceInFile(disableIpv6); e != nil {
-		if IGNORE_VERIFY {
-			log.Warn().Msg("replace was failed")
-		} else {
-			log.Error().Msg("replace was failed")
-			err = e
-			return
-		}
-	}
+	exec.Command("bash", "-c", "cat /dev/null > /etc/sysctl.conf").Run()
 
 	networkHardening := []AppendStringToFileType{
+		{
+			Str:  "net.ipv4.ip_forward=1",
+			File: "/etc/sysctl.conf",
+		},
+		{
+			Str:  "net.ipv6.conf.all.disable_ipv6=1",
+			File: "/etc/sysctl.conf",
+		},
 		{
 			Str:  fmt.Sprintf("net.netfilter.nf_conntrack_max=%d", (si.Memory.Size*1048576)/16384/2),
 			File: "/etc/sysctl.conf",
@@ -146,23 +126,8 @@ func finally() (err error) {
 		}
 	}
 
-	cmd := CommandType{
-		Type:    COMMAND_EXEC_TYPE,
-		Name:    "commit enable sysctl.conf",
-		Command: *exec.Command("sysctl", "-p"),
-	}
-	log.Info().Msg(getMessage(cmd, DOING_STATE))
-	if e := cmd.Command.Run(); e != nil {
-		if IGNORE_VERIFY {
-			log.Warn().Msg(getMessage(cmd, FAILED_STATE))
-		} else {
-			log.Error().Msg(getMessage(cmd, FAILED_STATE))
-			err = e
-			return
-		}
-	} else {
-		log.Info().Msg(getMessage(cmd, DONE_STATE))
-	}
+	log.Info().Msg("Reboot Server")
+	exec.Command("reboot").Run()
 
 	return
 }

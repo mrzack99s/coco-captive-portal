@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/user"
 	"time"
@@ -43,7 +44,17 @@ func main() {
 		},
 	}
 
+	var cmdVersion = &cobra.Command{
+		Use:   "version",
+		Short: "To show version of the " + installer_utils.APP_NAME,
+		Args:  cobra.MinimumNArgs(0),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("%s version %s\n", installer_utils.APP_NAME, installer_utils.APP_VERSION)
+		},
+	}
+
 	cmdUp.Flags().BoolVar(&installer_utils.IGNORE_VERIFY, "ignore", false, "Ignore some resource verify")
+	cmdUp.Flags().BoolVar(&installer_utils.RE_INSTALL, "re-install", false, "Re-installation")
 	cmdUp.Flags().StringVarP(&installer_utils.IMPORT_FILE_PATH, "import", "f", "", "Import config file")
 
 	cmdPurge.Flags().BoolVar(&installer_utils.IGNORE_VERIFY, "force", false, "Force uninstall")
@@ -51,5 +62,6 @@ func main() {
 	var rootCmd = &cobra.Command{Use: "coco-installer"}
 	rootCmd.AddCommand(cmdUp)
 	rootCmd.AddCommand(cmdPurge)
+	rootCmd.AddCommand(cmdVersion)
 	rootCmd.Execute()
 }

@@ -164,6 +164,8 @@ func defineConfig() (err error) {
 
 	if !confirmWithMsg("Authorized access from any network?") {
 		config.AuthorizedNetworks = scanArray("Enter a network cidr (ex. 10.0.0.0/24): ")
+	} else {
+		config.AuthorizedNetworks = append(config.AuthorizedNetworks, "0.0.0.0/0")
 	}
 
 	clearTerminal()
@@ -191,20 +193,19 @@ func defineConfig() (err error) {
 	config.Administrator.Credential = types.CredentialType{}
 	fmt.Print("### Administrator Config\n\n")
 	config.Administrator.Credential.Username = scan("Administrator username: ")
-	fmt.Print("Administrator password: ")
+	fmt.Print("Administrator password: \n")
 	password, _ := terminal.ReadPassword(0)
 	config.Administrator.Credential.Password = utils.Sha512encode(string(password))
 
 	if !confirmWithMsg("Authorized access an operator from any network?") {
 		config.Administrator.AuthorizedNetworks = scanArray("Enter a network cidr (ex. 10.0.0.0/24): ")
+	} else {
+		config.Administrator.AuthorizedNetworks = append(config.Administrator.AuthorizedNetworks, "0.0.0.0/0")
 	}
 
 	clearTerminal()
 	fmt.Print("### System Config\n\n")
 	config.DDOSPrevention = confirmWithMsg("Enable DDOS prevention?")
-
-	config.AuthorizedNetworks = append(config.AuthorizedNetworks, "0.0.0.0/0")
-	config.Administrator.AuthorizedNetworks = append(config.Administrator.AuthorizedNetworks, "0.0.0.0/0")
 
 	dByte, err := yaml.Marshal(config)
 	if err != nil {

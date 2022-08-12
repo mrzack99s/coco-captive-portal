@@ -37,3 +37,8 @@ func AppendStringToFile(t AppendStringToFileType) (err error) {
 	}
 	return
 }
+
+func WriteToFile(t AppendStringToFileType) (err error) {
+	err = os.WriteFile(t.File, []byte(t.Str), 0644)
+	return
+}
